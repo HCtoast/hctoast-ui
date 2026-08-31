@@ -23,15 +23,12 @@ const themeInit = `(function(){try{var t=localStorage.getItem("hctoast-theme");i
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="ko"
-      className={gowunBatang.variable}
-      suppressHydrationWarning
-    >
-      <head>
+    <html lang="ko" className={gowunBatang.variable} suppressHydrationWarning>
+      <body>
+        {/* 하이드레이션 전에 저장된 테마를 <html>에 적용 (FOUC/미스매치 방지) */}
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
-      </head>
-      <body>{children}</body>
+        {children}
+      </body>
     </html>
   );
 }
