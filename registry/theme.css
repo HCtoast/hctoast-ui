@@ -21,6 +21,14 @@
   --color-lime-900: #333c0d;
   --color-lime-950: #14180a;
 
+  /* 벚꽃 (day 장식 시그니처) */
+  --color-blossom-50:  #fdf2f6;
+  --color-blossom-100: #fce1ec;
+  --color-blossom-200: #f7c8db;  /* ★ day 벚꽃 */
+  --color-blossom-300: #efa6c2;
+  --color-blossom-400: #e07fa3;
+  --color-blossom-500: #c85a82;
+
   /* 아이보리 (라이트 지면) */
   --color-ivory-50:  #fffdf7;
   --color-ivory-100: #faf7ec;
@@ -87,6 +95,7 @@
   --action-ring:   color-mix(in oklab, var(--color-lime-700) 40%, transparent);
 
   --accent:        var(--color-lime-400);   /* 장식 전용. 라이트에서 텍스트 금지 */
+  --blossom:       var(--color-blossom-200); /* day 벚꽃 장식. 채우기·장식 전용, 텍스트 금지 */
 
   --danger:       var(--color-danger-light);
   --danger-hover: #93261c;   /* danger 솔리드 버튼 호버 (더 어둡게) */
@@ -125,6 +134,7 @@
   --action-ring:   color-mix(in oklab, var(--color-lime-400) 50%, transparent);
 
   --accent:        var(--color-lime-400);
+  --blossom:       var(--color-blossom-300);   /* 다크에선 조금 더 진하게 */
 
   --danger:       var(--color-danger-dark);
   --danger-hover: #f4a99d;   /* 다크는 호버를 더 밝게 */
@@ -163,6 +173,7 @@
   --action-ring:   color-mix(in oklab, var(--color-lime-400) 50%, transparent);
 
   --accent:        var(--color-lime-400);
+  --blossom:       var(--color-blossom-300);
 
   --danger:       var(--color-danger-dark);
   --danger-hover: #f4a99d;
@@ -191,6 +202,7 @@
     --action: var(--color-lime-400); --action-hover: var(--color-lime-300);
     --action-soft: color-mix(in oklab, var(--color-lime-400) 16%, transparent);
     --action-ring: color-mix(in oklab, var(--color-lime-400) 50%, transparent);
+    --blossom: var(--color-blossom-300);
     --danger: var(--color-danger-dark);   --danger-hover: #f4a99d;
     --warning: var(--color-warning-dark);
     --success: var(--color-success-dark); --info: var(--color-info-dark);
@@ -223,6 +235,7 @@
   --color-action-hover:  var(--action-hover);
   --color-action-soft:   var(--action-soft);
   --color-accent:        var(--accent);
+  --color-blossom:       var(--blossom);
   --color-danger:        var(--danger);
   --color-warning:       var(--warning);
   --color-success:       var(--success);

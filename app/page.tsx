@@ -138,6 +138,7 @@ const SEMANTIC_SWATCHES: [string, string][] = [
   ["action-hover", "bg-action-hover"],
   ["action-soft", "bg-action-soft"],
   ["accent", "bg-accent"],
+  ["blossom", "bg-blossom"],
 ];
 
 const TYPE_SCALE = [
