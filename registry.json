@@ -1,0 +1,141 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "hctoast-ui",
+  "homepage": "https://hctoast-ui.vercel.app",
+  "items": [
+    {
+      "name": "tokens",
+      "type": "registry:file",
+      "title": "HCToast 디자인 토큰",
+      "description": "색·간격·타이포·모서리·그림자 토큰과 타이포 유틸리티. 모든 컴포넌트의 전제.",
+      "files": [
+        {
+          "path": "registry/theme.css",
+          "type": "registry:file",
+          "target": "app/theme.css"
+        }
+      ]
+    },
+    {
+      "name": "cn",
+      "type": "registry:lib",
+      "title": "cn()",
+      "description": "clsx + tailwind-merge className 병합 유틸.",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "files": [{ "path": "registry/lib/cn.ts", "type": "registry:lib" }]
+    },
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "title": "Button",
+      "description": "primary / secondary / ghost / danger / link · sm 32 / md 40 / lg 48.",
+      "dependencies": ["class-variance-authority", "radix-ui"],
+      "registryDependencies": ["https://hctoast-ui.vercel.app/r/tokens.json", "https://hctoast-ui.vercel.app/r/cn.json"],
+      "files": [{ "path": "registry/ui/button.tsx", "type": "registry:ui" }]
+    },
+    {
+      "name": "card",
+      "type": "registry:ui",
+      "title": "Card",
+      "description": "elevation 1 면(border + shadow-e1). Header / Title / Description / Content / Footer.",
+      "registryDependencies": ["https://hctoast-ui.vercel.app/r/tokens.json", "https://hctoast-ui.vercel.app/r/cn.json"],
+      "files": [{ "path": "registry/ui/card.tsx", "type": "registry:ui" }]
+    },
+    {
+      "name": "input",
+      "type": "registry:ui",
+      "title": "Input",
+      "description": "높이 40, border-strong 테두리, rounded-md.",
+      "registryDependencies": ["https://hctoast-ui.vercel.app/r/tokens.json", "https://hctoast-ui.vercel.app/r/cn.json"],
+      "files": [{ "path": "registry/ui/input.tsx", "type": "registry:ui" }]
+    },
+    {
+      "name": "label",
+      "type": "registry:ui",
+      "title": "Label",
+      "description": "text-label 폼 라벨. peer-disabled 대응.",
+      "registryDependencies": ["https://hctoast-ui.vercel.app/r/tokens.json", "https://hctoast-ui.vercel.app/r/cn.json"],
+      "files": [{ "path": "registry/ui/label.tsx", "type": "registry:ui" }]
+    },
+    {
+      "name": "badge",
+      "type": "registry:ui",
+      "title": "Badge",
+      "description": "neutral / action / success / warning / danger / info. rounded-sm.",
+      "dependencies": ["class-variance-authority", "radix-ui"],
+      "registryDependencies": ["https://hctoast-ui.vercel.app/r/tokens.json", "https://hctoast-ui.vercel.app/r/cn.json"],
+      "files": [{ "path": "registry/ui/badge.tsx", "type": "registry:ui" }]
+    },
+    {
+      "name": "separator",
+      "type": "registry:ui",
+      "title": "Separator",
+      "description": "horizontal / vertical. decorative 여부로 role 결정.",
+      "dependencies": ["class-variance-authority"],
+      "registryDependencies": ["https://hctoast-ui.vercel.app/r/tokens.json", "https://hctoast-ui.vercel.app/r/cn.json"],
+      "files": [{ "path": "registry/ui/separator.tsx", "type": "registry:ui" }]
+    },
+    {
+      "name": "skeleton",
+      "type": "registry:ui",
+      "title": "Skeleton",
+      "description": "animate-pulse 로딩 플레이스홀더. bg-bg-inset.",
+      "registryDependencies": ["https://hctoast-ui.vercel.app/r/tokens.json", "https://hctoast-ui.vercel.app/r/cn.json"],
+      "files": [{ "path": "registry/ui/skeleton.tsx", "type": "registry:ui" }]
+    },
+    {
+      "name": "dialog",
+      "type": "registry:ui",
+      "title": "Dialog",
+      "description": "Radix Dialog 래퍼. 레벨 3 면(surface-raised + shadow-e3 + rounded-xl), overlay 백드롭.",
+      "dependencies": ["radix-ui", "lucide-react"],
+      "registryDependencies": ["https://hctoast-ui.vercel.app/r/tokens.json", "https://hctoast-ui.vercel.app/r/cn.json"],
+      "files": [{ "path": "registry/ui/dialog.tsx", "type": "registry:ui" }]
+    },
+    {
+      "name": "dropdown-menu",
+      "type": "registry:ui",
+      "title": "DropdownMenu",
+      "description": "Radix DropdownMenu 래퍼. item / checkbox / radio / label / separator / sub.",
+      "dependencies": ["radix-ui", "lucide-react"],
+      "registryDependencies": ["https://hctoast-ui.vercel.app/r/tokens.json", "https://hctoast-ui.vercel.app/r/cn.json"],
+      "files": [{ "path": "registry/ui/dropdown-menu.tsx", "type": "registry:ui" }]
+    },
+    {
+      "name": "popover",
+      "type": "registry:ui",
+      "title": "Popover",
+      "description": "Radix Popover 래퍼. 레벨 2 면.",
+      "dependencies": ["radix-ui"],
+      "registryDependencies": ["https://hctoast-ui.vercel.app/r/tokens.json", "https://hctoast-ui.vercel.app/r/cn.json"],
+      "files": [{ "path": "registry/ui/popover.tsx", "type": "registry:ui" }]
+    },
+    {
+      "name": "tooltip",
+      "type": "registry:ui",
+      "title": "Tooltip",
+      "description": "Radix Tooltip 래퍼. 레벨 2 면, text-body-sm.",
+      "dependencies": ["radix-ui"],
+      "registryDependencies": ["https://hctoast-ui.vercel.app/r/tokens.json", "https://hctoast-ui.vercel.app/r/cn.json"],
+      "files": [{ "path": "registry/ui/tooltip.tsx", "type": "registry:ui" }]
+    },
+    {
+      "name": "select",
+      "type": "registry:ui",
+      "title": "Select",
+      "description": "Radix Select 래퍼. 트리거 높이 40, popper 포지션, 스크롤 버튼 포함.",
+      "dependencies": ["radix-ui", "lucide-react"],
+      "registryDependencies": ["https://hctoast-ui.vercel.app/r/tokens.json", "https://hctoast-ui.vercel.app/r/cn.json"],
+      "files": [{ "path": "registry/ui/select.tsx", "type": "registry:ui" }]
+    },
+    {
+      "name": "tabs",
+      "type": "registry:ui",
+      "title": "Tabs",
+      "description": "Radix Tabs 래퍼. bg-bg-inset 트랙 + 활성 탭 surface-raised.",
+      "dependencies": ["radix-ui"],
+      "registryDependencies": ["https://hctoast-ui.vercel.app/r/tokens.json", "https://hctoast-ui.vercel.app/r/cn.json"],
+      "files": [{ "path": "registry/ui/tabs.tsx", "type": "registry:ui" }]
+    }
+  ]
+}

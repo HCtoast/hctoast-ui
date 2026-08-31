@@ -1,0 +1,357 @@
+/* ============================================================
+   개인 UI 프레임워크 — theme.css
+   Tailwind CSS v4 (@theme) 기준. 프로젝트 진입 CSS에 통째로 붙여넣기.
+   토큰 이름만 사용할 것. 임의값 문법(bg-[#abc], p-[13px]) 금지.
+   ============================================================ */
+
+@import "tailwindcss";
+
+/* ---------- 1. 원시 팔레트 (raw scale) — 직접 쓰지 말 것 ---------- */
+@theme {
+  /* 라임 (시그니처) */
+  --color-lime-50:  #f7fae9;
+  --color-lime-100: #eef4c9;
+  --color-lime-200: #e2ec9f;
+  --color-lime-300: #d6e388;
+  --color-lime-400: #c9d96b;  /* ★ 시그니처 */
+  --color-lime-500: #adbf4a;
+  --color-lime-600: #8a9c2c;
+  --color-lime-700: #5f6e1a;  /* ★ 라이트 동작색 */
+  --color-lime-800: #4c5814;
+  --color-lime-900: #333c0d;
+  --color-lime-950: #14180a;
+
+  /* 아이보리 (라이트 지면) */
+  --color-ivory-50:  #fffdf7;
+  --color-ivory-100: #faf7ec;
+  --color-ivory-200: #f7f4ea;
+  --color-ivory-300: #ebe6d6;
+  --color-ivory-400: #e3decd;
+  --color-ivory-500: #cdc6b0;
+  --color-ivory-600: #918c7c;
+  --color-ivory-700: #6b6759;
+  --color-ivory-800: #3b3931;
+  --color-ivory-900: #1c1b16;
+
+  /* 뉴트럴 다크 (기본 다크 지면) */
+  --color-ink-50:  #ececed;
+  --color-ink-100: #d4d4d6;
+  --color-ink-200: #a1a1a6;
+  --color-ink-300: #6e6e75;
+  --color-ink-400: #4a4a50;
+  --color-ink-500: #3a3a40;
+  --color-ink-600: #2a2a2e;
+  --color-ink-700: #1d1d20;
+  --color-ink-800: #151517;
+  --color-ink-900: #0c0c0d;
+
+  /* 블루 다크 (대체 다크 지면 — 블루라이트 필터 켠 환경용) */
+  --color-midnight-50:  #e7eaf2;
+  --color-midnight-200: #9aa3ba;
+  --color-midnight-600: #1e2846;
+  --color-midnight-700: #121a32;
+  --color-midnight-800: #0a1024;
+  --color-midnight-900: #020715;
+
+  /* 상태색 — 라임과 색상이 겹치지 않도록 의도적으로 분리 */
+  --color-danger-light:  #b03a2e;
+  --color-danger-dark:   #f08a7c;
+  --color-warning-light: #8a6410;
+  --color-warning-dark:  #e8b34a;
+  --color-success-light: #17715c;
+  --color-success-dark:  #57c9a8;
+  --color-info-light:    #3f5f9e;
+  --color-info-dark:     #8fb0e8;
+}
+
+/* ---------- 2. 시맨틱 토큰 — 컴포넌트는 오직 이것만 참조 ---------- */
+/* 기본 = day (아이보리 라이트) */
+:root {
+  --bg:            var(--color-ivory-200);
+  --bg-inset:      var(--color-ivory-300);
+  --surface:       var(--color-ivory-100);
+  --surface-raised:var(--color-ivory-50);
+  --border:        var(--color-ivory-400);
+  --border-strong: var(--color-ivory-500);
+
+  --fg:            var(--color-ivory-900);
+  --fg-muted:      var(--color-ivory-700);
+  --fg-subtle:     var(--color-ivory-600);
+  --fg-on-action:  #ffffff;
+  --fg-on-danger:  #ffffff;   /* danger 솔리드 위 텍스트 */
+  --fg-on-solid:   #ffffff;   /* 채도 높은 채움(솔리드 뱃지 등) 위 텍스트 */
+
+  --action:        var(--color-lime-700);
+  --action-hover:  var(--color-lime-800);
+  --action-soft:   var(--color-lime-100);   /* 연한 배경 (뱃지/선택 상태) */
+  --action-ring:   color-mix(in oklab, var(--color-lime-700) 40%, transparent);
+
+  --accent:        var(--color-lime-400);   /* 장식 전용. 라이트에서 텍스트 금지 */
+
+  --danger:       var(--color-danger-light);
+  --danger-hover: #93261c;   /* danger 솔리드 버튼 호버 (더 어둡게) */
+  --warning: var(--color-warning-light);
+  --success: var(--color-success-light);
+  --info:    var(--color-info-light);
+
+  --overlay: rgb(28 27 22 / 0.45);   /* 모달 백드롭 */
+
+  --shadow-1: 0 1px 2px rgb(28 27 22 / 0.06);
+  --shadow-2: 0 2px 8px rgb(28 27 22 / 0.08);
+  --shadow-3: 0 8px 24px rgb(28 27 22 / 0.10);
+
+  color-scheme: light;
+}
+
+/* night-neutral — 기본 다크 (day와 페어) */
+[data-theme="night"] {
+  --bg:            var(--color-ink-900);
+  --bg-inset:      #08080a;
+  --surface:       var(--color-ink-800);
+  --surface-raised:var(--color-ink-700);
+  --border:        var(--color-ink-600);
+  --border-strong: var(--color-ink-500);
+
+  --fg:            var(--color-ink-50);
+  --fg-muted:      var(--color-ink-200);
+  --fg-subtle:     var(--color-ink-300);
+  --fg-on-action:  var(--color-lime-950);
+  --fg-on-danger:  #1c130f;   /* 살몬 danger-dark 위, AA 통과하는 어두운 값 */
+  --fg-on-solid:   #1c130f;
+
+  --action:        var(--color-lime-400);
+  --action-hover:  var(--color-lime-300);
+  --action-soft:   color-mix(in oklab, var(--color-lime-400) 16%, transparent);
+  --action-ring:   color-mix(in oklab, var(--color-lime-400) 50%, transparent);
+
+  --accent:        var(--color-lime-400);
+
+  --danger:       var(--color-danger-dark);
+  --danger-hover: #f4a99d;   /* 다크는 호버를 더 밝게 */
+  --warning: var(--color-warning-dark);
+  --success: var(--color-success-dark);
+  --info:    var(--color-info-dark);
+
+  --overlay: rgb(0 0 0 / 0.6);
+
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.40);
+  --shadow-2: 0 2px 8px rgb(0 0 0 / 0.45);
+  --shadow-3: 0 8px 24px rgb(0 0 0 / 0.55);
+
+  color-scheme: dark;
+}
+
+/* night-blue — 대체 다크 (블루라이트 필터 환경) */
+[data-theme="night-blue"] {
+  --bg:            var(--color-midnight-900);
+  --bg-inset:      #01040e;
+  --surface:       var(--color-midnight-800);
+  --surface-raised:var(--color-midnight-700);
+  --border:        var(--color-midnight-600);
+  --border-strong: #2b3a63;
+
+  --fg:            var(--color-midnight-50);
+  --fg-muted:      var(--color-midnight-200);
+  --fg-subtle:     #6c7691;
+  --fg-on-action:  var(--color-lime-950);
+  --fg-on-danger:  #1c130f;
+  --fg-on-solid:   #1c130f;
+
+  --action:        var(--color-lime-400);
+  --action-hover:  var(--color-lime-300);
+  --action-soft:   color-mix(in oklab, var(--color-lime-400) 16%, transparent);
+  --action-ring:   color-mix(in oklab, var(--color-lime-400) 50%, transparent);
+
+  --accent:        var(--color-lime-400);
+
+  --danger:       var(--color-danger-dark);
+  --danger-hover: #f4a99d;
+  --warning: var(--color-warning-dark);
+  --success: var(--color-success-dark);
+  --info:    var(--color-info-dark);
+
+  --overlay: rgb(1 4 14 / 0.66);
+
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.50);
+  --shadow-2: 0 2px 8px rgb(0 0 0 / 0.55);
+  --shadow-3: 0 8px 24px rgb(0 0 0 / 0.65);
+
+  color-scheme: dark;
+}
+
+/* 시스템 설정 따라가기 (data-theme 미지정 시) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --bg: var(--color-ink-900);      --bg-inset: #08080a;
+    --surface: var(--color-ink-800); --surface-raised: var(--color-ink-700);
+    --border: var(--color-ink-600);  --border-strong: var(--color-ink-500);
+    --fg: var(--color-ink-50);       --fg-muted: var(--color-ink-200);
+    --fg-subtle: var(--color-ink-300); --fg-on-action: var(--color-lime-950);
+    --fg-on-danger: #1c130f; --fg-on-solid: #1c130f;
+    --action: var(--color-lime-400); --action-hover: var(--color-lime-300);
+    --action-soft: color-mix(in oklab, var(--color-lime-400) 16%, transparent);
+    --action-ring: color-mix(in oklab, var(--color-lime-400) 50%, transparent);
+    --danger: var(--color-danger-dark);   --danger-hover: #f4a99d;
+    --warning: var(--color-warning-dark);
+    --success: var(--color-success-dark); --info: var(--color-info-dark);
+    --overlay: rgb(0 0 0 / 0.6);
+    --shadow-1: 0 1px 2px rgb(0 0 0 / 0.40);
+    --shadow-2: 0 2px 8px rgb(0 0 0 / 0.45);
+    --shadow-3: 0 8px 24px rgb(0 0 0 / 0.55);
+    color-scheme: dark;
+  }
+}
+
+/* ---------- 3. Tailwind 유틸리티에 시맨틱 토큰 노출 ---------- */
+/* bg-surface, text-fg-muted, border-border, ring-action 처럼 쓸 수 있게 함 */
+@theme inline {
+  --color-bg:            var(--bg);
+  --color-bg-inset:      var(--bg-inset);
+  --color-surface:       var(--surface);
+  --color-surface-raised:var(--surface-raised);
+  --color-border:        var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-fg:            var(--fg);
+  --color-fg-muted:      var(--fg-muted);
+  --color-fg-subtle:     var(--fg-subtle);
+  --color-fg-on-action:  var(--fg-on-action);
+  --color-fg-on-danger:  var(--fg-on-danger);
+  --color-fg-on-solid:   var(--fg-on-solid);
+  --color-danger-hover:  var(--danger-hover);
+  --color-overlay:       var(--overlay);
+  --color-action:        var(--action);
+  --color-action-hover:  var(--action-hover);
+  --color-action-soft:   var(--action-soft);
+  --color-accent:        var(--accent);
+  --color-danger:        var(--danger);
+  --color-warning:       var(--warning);
+  --color-success:       var(--success);
+  --color-info:          var(--info);
+
+  /* 모서리 — 12px 이상이 기본 취향 */
+  --radius-sm:   8px;   /* 뱃지, 체크박스 */
+  --radius-md:   12px;  /* 버튼, 인풋, 셀렉트 */
+  --radius-lg:   16px;  /* 카드, 팝오버 */
+  --radius-xl:   24px;  /* 모달, 시트, 대형 패널 */
+  --radius-full: 9999px;
+
+  /* 그림자 */
+  --shadow-e1: var(--shadow-1);
+  --shadow-e2: var(--shadow-2);
+  --shadow-e3: var(--shadow-3);
+
+  /* 간격 — 4px 베이스, 실사용은 8의 배수 권장 */
+  --spacing: 4px;
+
+  /* 폰트 */
+  --font-sans: "Pretendard Variable", Pretendard, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* 제목 전용 폰트. 고운바탕 — 400 / 700 두 단계뿐이라 적용 범위를 좁게 가져간다.
+     --font-gowun 은 next/font/google 이 주입한다. subsets 는 ["latin"] 만 —
+     이 폰트는 "korean" 서브셋이 없고 웨이트 파일이 한글을 통째로 포함한다. */
+  --font-display: var(--font-gowun), "Gowun Batang", var(--font-sans);
+
+  /* 타이포는 아래 4번의 @utility 로 정의한다.
+     Tailwind v4 의 --text-* 테마 변수는 line-height/letter-spacing/font-weight 수정자만 지원하고
+     font-family 수정자는 없다. 제목 폰트를 유틸리티에 묶으려면 @utility 를 써야 한다. */
+
+  /* 모션 */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 120ms;
+  --duration-base: 180ms;
+  --duration-slow: 280ms;
+}
+
+
+/* ---------- 4. 타이포 유틸리티 ----------
+   본문/제목 스케일 10종 + 컨트롤 라벨 3종. 각 유틸리티가 크기·행간·굵기·자간·폰트를 전부 결정한다.
+   text-display / text-h1 만 제목 폰트를 쓴다. 경계는 32px.
+   컴포넌트에서 font-* / leading-* / tracking-* 를 덧붙이지 않는다. */
+@utility text-display {
+  font-family: var(--font-display);
+  font-size: 40px; line-height: 48px; font-weight: 700; letter-spacing: -0.02em;
+}
+@utility text-h1 {
+  font-family: var(--font-display);
+  font-size: 32px; line-height: 40px; font-weight: 700; letter-spacing: -0.02em;
+}
+/* h2 부터는 본문 폰트. 고운바탕에 600(SemiBold)이 없어서 여기까지 올리면
+   24px 제목이 700으로 나가 h1 과 굵기가 같아진다. 경계를 32px 로 둔 이유. */
+@utility text-h2 {
+  font-size: 24px; line-height: 32px; font-weight: 600; letter-spacing: -0.01em;
+}
+@utility text-h3      { font-size: 20px; line-height: 28px; font-weight: 600; }
+@utility text-body-lg { font-size: 17px; line-height: 28px; font-weight: 400; }
+@utility text-body    { font-size: 15px; line-height: 24px; font-weight: 400; }
+@utility text-body-sm { font-size: 13px; line-height: 20px; font-weight: 400; }
+@utility text-label   { font-size: 13px; line-height: 16px; font-weight: 600; }
+@utility text-caption { font-size: 12px; line-height: 16px; font-weight: 400; }
+@utility text-code    { font-family: var(--font-mono); font-size: 13px; line-height: 20px; font-weight: 400; }
+
+/* 컨트롤(버튼 등) 라벨 — 크기별 3종. 폼 라벨은 text-label(13) 을 그대로 쓴다.
+   버튼 크기(sm 32 / md 40 / lg 48)에 1:1 대응. 아이콘 크기는 icon-sm/md/lg 로 별도. */
+@utility text-label-sm { font-size: 13px; line-height: 16px; font-weight: 600; }
+@utility text-label-md { font-size: 14px; line-height: 20px; font-weight: 600; }
+@utility text-label-lg { font-size: 15px; line-height: 24px; font-weight: 600; letter-spacing: -0.01em; }
+
+/* 아이콘 크기 — 텍스트와 같은 px 로 맞추면 커 보여서 한 단계씩 키운다.
+   sm 라벨 13 → 아이콘 16 / md 14 → 18 / lg 15 → 20. */
+@utility icon-sm { inline-size: 16px; block-size: 16px; }
+@utility icon-md { inline-size: 18px; block-size: 18px; }
+@utility icon-lg { inline-size: 20px; block-size: 20px; }
+
+/* 숫자 강조(스탯 값) 예외용. 본문 자리에 제목 폰트를 얹을 때만. */
+@utility font-display {
+  font-family: var(--font-display);
+}
+
+/* 인터랙션 트랜지션 기본값. 색·테두리·그림자만 트랜지션한다(레이아웃 속성 금지).
+   Tailwind v4 에 --duration-* 테마 네임스페이스가 없어서 유틸리티로 묶는다. */
+@utility transition-base {
+  transition-property: color, background-color, border-color, outline-color, box-shadow, fill, stroke;
+  transition-timing-function: var(--ease-out-soft);
+  transition-duration: var(--duration-base);
+}
+
+/* ---------- 4-1. 오버레이 모션 ----------
+   Radix 오버레이(Dialog / DropdownMenu / Popover / Tooltip / Select) 등장·퇴장.
+   페이드 + 2% 스케일만 — 레이아웃(width/height/top/left)은 건드리지 않는다.
+   컴포넌트에서 data-[state=open]:animate-* / data-[state=closed]:animate-* 로 쓴다.
+   Radix 프리미티브가 애니메이션 종료까지 unmount 를 지연시킨다. */
+@keyframes hct-fade-in  { from { opacity: 0; } }
+@keyframes hct-fade-out { to   { opacity: 0; } }
+@keyframes hct-pop-in   { from { opacity: 0; transform: scale(0.98); } }
+@keyframes hct-pop-out  { to   { opacity: 0; transform: scale(0.98); } }
+
+@utility animate-fade-in  { animation: hct-fade-in  var(--duration-base) var(--ease-out-soft); }
+@utility animate-fade-out { animation: hct-fade-out var(--duration-fast) var(--ease-out-soft); }
+@utility animate-pop-in   { animation: hct-pop-in   var(--duration-base) var(--ease-out-soft); }
+@utility animate-pop-out  { animation: hct-pop-out  var(--duration-fast) var(--ease-out-soft); }
+
+/* ---------- 5. 베이스 ---------- */
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    /* text-body 와 동일한 값. 타이포 유틸은 @utility 로 정의돼 있어
+       --text-body 테마 변수가 존재하지 않으므로 여기서는 리터럴을 쓴다. */
+    font-size: 15px;
+    line-height: 24px;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* 포커스 링 — 전 컴포넌트 공통. 개별 구현 금지 */
+  :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+    outline: 2px solid var(--action);
+    outline-offset: 2px;
+    border-radius: var(--radius-md);
+  }
+  ::selection { background: var(--action-soft); color: var(--fg); }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
