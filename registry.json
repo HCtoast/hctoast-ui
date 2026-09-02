@@ -25,6 +25,20 @@
       "files": [{ "path": "registry/lib/cn.ts", "type": "registry:lib" }]
     },
     {
+      "name": "accent-nature",
+      "type": "registry:file",
+      "title": "장식 팩 · nature (벚꽃 · 물)",
+      "description": "선택적 장식 토큰. blossom(벚꽃) + water(day=바다 / night=호수). tokens 위에 얹는다 — 안 써도 컴포넌트는 정상 동작.",
+      "registryDependencies": ["https://hctoast-ui.vercel.app/r/tokens.json"],
+      "files": [
+        {
+          "path": "registry/accents/nature.css",
+          "type": "registry:file",
+          "target": "app/accent-nature.css"
+        }
+      ]
+    },
+    {
       "name": "button",
       "type": "registry:ui",
       "title": "Button",

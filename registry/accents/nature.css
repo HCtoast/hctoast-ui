@@ -1,0 +1,60 @@
+/* ============================================================
+   장식 팩 — nature (벚꽃 · 물)
+   registry/theme.css(tokens) 위에 선택적으로 얹는 레이어. 얹지 않아도
+   컴포넌트는 전부 정상 동작한다 — bg-blossom/bg-water 는 그냥 안 쓰면 그만.
+
+   슬롯은 두 개뿐: blossom(나무·꽃 계열 장식), water(물 계열 장식).
+   day = 벚꽃 + 바다, night/night-blue = 벚꽃 + 호수 — 이름은 하나(water)지만
+   테마마다 값과 이야기가 바뀐다.
+
+   다른 조합을 쓰고 싶으면 이 파일을 통째로 다른 값으로 교체하면 된다.
+   변수 이름(--blossom, --water)만 유지하면 bg-blossom/border-blossom 같은
+   유틸리티 클래스는 그대로 쓸 수 있다. 예시 조합은 DESIGN.md "장식 팩" 절 참고.
+   ============================================================ */
+
+@theme {
+  /* 벚꽃 */
+  --color-blossom-50:  #fdf2f6;
+  --color-blossom-100: #fce1ec;
+  --color-blossom-200: #f7c8db;  /* ★ day 벚꽃 */
+  --color-blossom-300: #efa6c2;
+  --color-blossom-400: #e07fa3;
+  --color-blossom-500: #c85a82;
+
+  /* 물 (바다/호수) */
+  --color-water-50:  #eef6f7;
+  --color-water-100: #d3ebee;
+  --color-water-200: #a8d6dd;
+  --color-water-300: #78bdc8;  /* ★ night 호수 */
+  --color-water-400: #4a9bab;
+  --color-water-500: #2f7688;  /* ★ day 바다 */
+  --color-water-600: #265f6d;
+  --color-water-700: #1d4750;
+}
+
+:root {
+  --blossom: var(--color-blossom-200);  /* day 벚꽃 */
+  --water:   var(--color-water-500);    /* day 바다 */
+}
+
+[data-theme="night"] {
+  --blossom: var(--color-blossom-300);  /* 다크에선 조금 더 진하게 */
+  --water:   var(--color-water-300);    /* night 호수 */
+}
+
+[data-theme="night-blue"] {
+  --blossom: var(--color-blossom-300);
+  --water:   var(--color-water-300);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --blossom: var(--color-blossom-300);
+    --water:   var(--color-water-300);
+  }
+}
+
+@theme inline {
+  --color-blossom: var(--blossom);
+  --color-water:   var(--water);
+}
