@@ -139,6 +139,7 @@ const SEMANTIC_SWATCHES: [string, string][] = [
   ["action-soft", "bg-action-soft"],
   ["accent", "bg-accent"],
   ["blossom", "bg-blossom"],
+  ["water", "bg-water"],
 ];
 
 const TYPE_SCALE = [
