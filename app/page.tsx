@@ -194,8 +194,8 @@ export default function Home() {
             배포.
           </p>
           <p className="text-body-sm text-fg-subtle">
-            아래 설치 명령의 도메인은 배포 전 임시값입니다. 각 컴포넌트는 theme과
-            cn을 자동으로 함께 가져옵니다.
+            아래 명령을 그대로 붙여넣으면 설치됩니다. 각 컴포넌트는 tokens와 cn을
+            자동으로 함께 가져오므로 따로 받을 필요가 없습니다.
           </p>
         </section>
 

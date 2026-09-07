@@ -102,55 +102,51 @@ hctoast-ui/
 
 `npm run build`(= `shadcn build && next build`) → `public/r/*.json` 생성 → Vercel 에 배포하면 `https://hctoast-ui.vercel.app/r/button.json` 이 곧 설치 URL. 쇼케이스 앱이 그대로 문서 사이트가 된다.
 
-## 배포 (이 저장소)
+## 배포 (이 저장소) — 완료
 
-### 0. 커밋된 URL 전제
+| | |
+|---|---|
+| 저장소 | https://github.com/HCtoast/hctoast-ui (public) |
+| 문서 사이트 | https://hctoast-ui.vercel.app |
+| 레지스트리 | https://hctoast-ui.vercel.app/r/registry.json (16항목) |
+
 `registry.json` 의 `homepage` 와 모든 `registryDependencies`, `app/page.tsx` 의 `REGISTRY`,
-문서의 raw URL 이 전부 **`https://hctoast-ui.vercel.app`** / **`github.com/<me>/hctoast-ui`** 로
-박혀 있다. 아래 1~2 를 그 이름 그대로 맞추면 URL 을 하나도 안 고쳐도 된다.
+문서의 raw URL 이 전부 이 두 주소로 박혀 있다. Vercel 프로젝트 이름을 `hctoast-ui` 로
+맞췄기 때문에 URL 을 하나도 안 고쳐도 됐다.
 
-### 1. GitHub
-
+도메인을 바꾸려면 전역 치환 후 재빌드·커밋:
 ```bash
-gh repo create hctoast-ui --private --source=. --push
-#  또는: git remote add origin git@github.com:<me>/hctoast-ui.git && git push -u origin main
+sed -i 's#hctoast-ui.vercel.app#내도메인#g' registry.json app/page.tsx DISTRIBUTION.md
+npm run build
 ```
 
-- `raw.githubusercontent.com/<me>/hctoast-ui/main/CLAUDE.md` 가 살아있어야 새 프로젝트 셋업의 마지막 줄이 동작한다. private repo 면 raw 도 토큰이 필요하니, CLAUDE.md 배포용으로는 **public 이 편하다** (컴포넌트 소스가 민감하지 않으면 public 권장).
-
-### 2. Vercel
-
-1. Vercel 에서 **New Project → import `hctoast-ui`**.
-2. **Project Name 을 `hctoast-ui` 로** 둔다 → 프로덕션 URL 이 `https://hctoast-ui.vercel.app` 로 자동 배정 → 커밋된 URL 과 일치, 수정 불필요.
-   - 다른 이름/도메인을 쓸 거면 전역 치환: `registry.json`(homepage + 모든 항목의 `registryDependencies`), `app/page.tsx` 의 `REGISTRY`, `DISTRIBUTION.md` 의 URL. 그 뒤 `npm run build` → 커밋.
-     `sed -i 's#hctoast-ui.vercel.app#내도메인#g' registry.json app/page.tsx DISTRIBUTION.md`
-3. 빌드 설정은 기본값. Vercel 이 `npm run build`(= `shadcn build && next build`)를 돌려 `public/r/*.json` 을 정적으로 서빙한다. `public/r/` 은 gitignore 지만 빌드가 매번 생성하므로 문제없다.
-4. Node 버전은 프로젝트 설정에서 20+ (로컬은 24).
-
-### 3. 배포 검증
+### 배포 검증 (2026-09-07 통과)
 
 ```bash
-curl -s https://hctoast-ui.vercel.app/r/registry.json | jq '.items[].name'   # 15개
+curl -s https://hctoast-ui.vercel.app/r/registry.json | jq '.items[].name'   # 16개
 curl -sI https://hctoast-ui.vercel.app/r/button.json | grep -i content-type   # application/json
 
-# 임시 프로젝트에서 실제 설치
-npx create-next-app@latest /tmp/probe --ts --tailwind --app --yes && cd /tmp/probe
+# 빈 프로젝트에서 실제 설치
+npx create-next-app@latest probe --ts --tailwind --app --yes && cd probe
 npx shadcn@latest init --base radix --template next --preset nova --yes
-npx shadcn@latest add https://hctoast-ui.vercel.app/r/button.json --yes
-#  → app/theme.css + lib/cn.ts + components/ui/button.tsx 3파일 생성되면 성공
+npx shadcn@latest add https://hctoast-ui.vercel.app/r/button.json --yes --overwrite
+#  → app/theme.css + lib/cn.ts + components/ui/button.tsx 가 생기면 성공
 ```
 
-그 뒤 `/tmp/probe/app/globals.css` 맨 아래에 `@import "./theme.css";` 추가 → `npm run build` 통과 확인.
+그 뒤 `probe/app/globals.css` 맨 아래에 `@import "./theme.css";` 추가 → `npm run build` 통과 확인.
 
-### 4. 컴포넌트를 추가/수정한 뒤
+> `--overwrite` 가 필요한 이유: `shadcn init --preset nova` 가 자체 `button.tsx` 를 먼저 깔아둔다.
+> 없으면 덮어쓸지 물어보다가 비대화형 환경에서 멈춘다.
+
+### 컴포넌트를 추가/수정한 뒤
 
 `registry/` 편집 → `registry.json` 갱신(새 항목이면 전체 URL registryDependencies) → `git push` →
 Vercel 이 자동 재배포하며 `public/r/*.json` 재생성. 소비자는 **재실행해야** 최신을 받는다
 (레지스트리 방식은 복사 시점 고정이라 자동 전파 없음 — 개인 프로젝트에선 오히려 장점).
 
-### 미확인 항목 (배포 전 PC에서)
+### 남은 확인
 
-- 세 테마 색 대비·폰트(고운바탕/Pretendard) 렌더 — 지금까지 헤드리스 스크린샷으로만 봄
+- 세 테마 색 대비·폰트(고운바탕/Pretendard) 렌더 — 아직 헤드리스 스크린샷으로만 봄. PC 브라우저에서 눈으로 볼 것
 - 오버레이 애니메이션(`animate-fade`/`animate-pop`) 실제 모션
 - `README.md` 가 create-next-app 기본값 — 교체 권장
 
@@ -162,7 +158,7 @@ cd my-app
 npx shadcn@latest init            # 컴포넌트 라이브러리: Radix UI
 npx shadcn@latest add https://hctoast-ui.vercel.app/r/button.json https://hctoast-ui.vercel.app/r/card.json
 # → button/card 가 tokens(app/theme.css) + cn 을 자동으로 함께 가져온다
-curl -o CLAUDE.md https://raw.githubusercontent.com/<me>/hctoast-ui/main/CLAUDE.md
+curl -o CLAUDE.md https://raw.githubusercontent.com/HCtoast/hctoast-ui/main/CLAUDE.md
 ```
 
 > `tokens` 항목은 `app/theme.css` 로 복사만 된다. 앱 진입 CSS(`app/globals.css`)에서 `@import "./theme.css";` 를 **직접 한 줄 추가**해야 한다. Pretendard·고운바탕 로딩은 `DESIGN.md` 폰트 로딩 절 참고.
