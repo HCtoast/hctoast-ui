@@ -25,6 +25,15 @@
       "files": [{ "path": "registry/lib/cn.ts", "type": "registry:lib" }]
     },
     {
+      "name": "category-palette",
+      "type": "registry:lib",
+      "title": "카테고리 팔레트",
+      "description": "사용자 분류(카테고리·태그)용 8색 + 무채색. 상태색과 역할이 다르다. CSS 토큰이 아니라 HSL 문자열 데이터 — DB 저장·밝기 파생용.",
+      "files": [
+        { "path": "registry/lib/category-palette.ts", "type": "registry:lib" }
+      ]
+    },
+    {
       "name": "button",
       "type": "registry:ui",
       "title": "Button",
