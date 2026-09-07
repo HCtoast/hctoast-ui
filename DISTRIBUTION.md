@@ -55,8 +55,6 @@ Dropdown Menu, Dialog, Popover, Tooltip, Select, Tabs, Command, Sheet, Toast
 hctoast-ui/
 ├─ registry/
 │  ├─ theme.css              # 코어 토큰(모든 컴포넌트의 전제). 레지스트리 항목 이름은 "tokens"
-│  ├─ accents/
-│  │  └─ nature.css          # 선택적 장식 팩("accent-nature"). 코어 아님, 안 얹어도 무방
 │  ├─ lib/cn.ts
 │  └─ ui/
 │     ├─ button.tsx          # ① 직접 작성
@@ -66,7 +64,6 @@ hctoast-ui/
 ├─ public/r/                 # 빌드 산출물 (JSON 매니페스트) — gitignore, `npm run build` 가 생성
 │  ├─ registry.json          # 레지스트리 인덱스
 │  ├─ tokens.json
-│  ├─ accent-nature.json
 │  ├─ button.json
 │  └─ dropdown-menu.json
 ├─ registry.json             # 소스 정의
@@ -133,7 +130,7 @@ gh repo create hctoast-ui --private --source=. --push
 ### 3. 배포 검증
 
 ```bash
-curl -s https://hctoast-ui.vercel.app/r/registry.json | jq '.items[].name'   # 16개
+curl -s https://hctoast-ui.vercel.app/r/registry.json | jq '.items[].name'   # 15개
 curl -sI https://hctoast-ui.vercel.app/r/button.json | grep -i content-type   # application/json
 
 # 임시 프로젝트에서 실제 설치
@@ -165,13 +162,9 @@ cd my-app
 npx shadcn@latest init            # 컴포넌트 라이브러리: Radix UI
 npx shadcn@latest add https://hctoast-ui.vercel.app/r/button.json https://hctoast-ui.vercel.app/r/card.json
 # → button/card 가 tokens(app/theme.css) + cn 을 자동으로 함께 가져온다
-
-# 장식 팩은 선택 — 벚꽃+물(바다/호수) 조합을 쓰고 싶을 때만
-npx shadcn@latest add https://hctoast-ui.vercel.app/r/accent-nature.json
-
 curl -o CLAUDE.md https://raw.githubusercontent.com/<me>/hctoast-ui/main/CLAUDE.md
 ```
 
-> `tokens` 항목은 `app/theme.css` 로 복사만 된다. 앱 진입 CSS(`app/globals.css`)에서 `@import "./theme.css";` 를 **직접 한 줄 추가**해야 한다(장식 팩을 받았다면 그 아래에 `@import "./accent-nature.css";` 도). Pretendard·고운바탕 로딩은 `DESIGN.md` 폰트 로딩 절 참고. 장식 팩은 안 받아도 나머지 컴포넌트는 전부 정상 동작 — `bg-blossom`/`bg-water` 같은 클래스만 못 쓴다.
+> `tokens` 항목은 `app/theme.css` 로 복사만 된다. 앱 진입 CSS(`app/globals.css`)에서 `@import "./theme.css";` 를 **직접 한 줄 추가**해야 한다. Pretendard·고운바탕 로딩은 `DESIGN.md` 폰트 로딩 절 참고.
 
 마지막 줄이 핵심이다. **컴포넌트보다 `CLAUDE.md`가 일관성에 더 크게 기여한다.** 컴포넌트는 있는 것만 통일해주지만, 규칙 파일은 앞으로 만들 모든 화면을 통일해준다.

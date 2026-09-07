@@ -64,8 +64,6 @@ const twMerge = extendTailwindMerge({
             "action-hover",
             "action-soft",
             "accent",
-            "blossom",
-            "water",
             "fg",
             "danger",
             "danger-hover",
@@ -76,7 +74,7 @@ const twMerge = extendTailwindMerge({
         },
       ],
       "border-color": [
-        { border: ["border", "border-strong", "accent", "blossom", "water"] },
+        { border: ["border", "border-strong", "accent"] },
       ],
       // icon-sm/md/lg 는 width+height 를 함께 세팅 → size/w/h 유틸과 충돌시킨다.
       size: ["icon-sm", "icon-md", "icon-lg"],

@@ -6,7 +6,7 @@
 ## 절대 규칙
 
 1. **임의값 문법 금지.** `bg-[#c9d96b]`, `p-[13px]`, `text-[15px]`, `rounded-[10px]` 전부 금지. 필요한 토큰이 없으면 만들어 쓰지 말고 **"토큰이 없습니다"라고 말하고 멈춘다.** 예외: 자손 선택자 변형(`[&>svg]:...`, `data-[state=open]:...`)과 Radix 런타임 CSS 변수 참조(`w-(--radix-select-trigger-width)` 등 위치 계산용)는 디자인값 하드코딩이 아니므로 허용.
-2. **원시 색 금지.** `bg-lime-400`, `text-gray-500`, `border-slate-200` 같은 Tailwind 기본 팔레트나 원시 스케일을 컴포넌트에서 직접 쓰지 않는다. 시맨틱 토큰만: `bg-bg` `bg-bg-inset` `bg-surface` `bg-surface-raised` `bg-fg` · `text-fg` `text-bg` `text-fg-muted` `text-fg-subtle` · `border-border` `border-border-strong` · `bg-action` `bg-action-hover` `bg-action-soft` `text-action` `text-fg-on-action` · `bg-danger` `bg-warning` `bg-success` `bg-info` · `text-danger` `text-warning` `text-success` `text-info` · `text-fg-on-danger` `text-fg-on-solid` (채도 높은 채움 위 텍스트) · `bg-accent` `bg-overlay`. 토큰에 불투명도 단축(`bg-action-soft/60`)은 허용, 임의값(`bg-[...]`)은 금지. `bg-blossom` `border-blossom` `bg-water` `border-water`는 선택적 "장식 팩"(`accents/*.css`, 기본은 `nature`)이 얹어야만 존재한다 — 팩을 안 쓰는 프로젝트에서 이 클래스를 쓰면 안 된다.
+2. **원시 색 금지.** `bg-lime-400`, `text-gray-500`, `border-slate-200` 같은 Tailwind 기본 팔레트나 원시 스케일을 컴포넌트에서 직접 쓰지 않는다. 시맨틱 토큰만: `bg-bg` `bg-bg-inset` `bg-surface` `bg-surface-raised` `bg-fg` · `text-fg` `text-bg` `text-fg-muted` `text-fg-subtle` · `border-border` `border-border-strong` · `bg-action` `bg-action-hover` `bg-action-soft` `text-action` `text-fg-on-action` · `bg-danger` `bg-warning` `bg-success` `bg-info` · `text-danger` `text-warning` `text-success` `text-info` · `text-fg-on-danger` `text-fg-on-solid` (채도 높은 채움 위 텍스트) · `bg-accent` `bg-overlay`. 토큰에 불투명도 단축(`bg-action-soft/60`)은 허용, 임의값(`bg-[...]`)은 금지.
 3. **타이포는 정해진 유틸리티만.** 본문/제목 10종: `text-display` `text-h1` `text-h2` `text-h3` `text-body-lg` `text-body` `text-body-sm` `text-label` `text-caption` `text-code`. 컨트롤 라벨 3종(버튼 등 size 변형 안에서만): `text-label-sm` `text-label-md` `text-label-lg`. 아이콘 크기 3종: `icon-sm`(16) `icon-md`(18) `icon-lg`(20) — 텍스트와 같은 px로 맞추지 말고 한 단계 키운다. 어디에도 `font-bold`, `leading-tight`, `tracking-wide` 등을 덧붙이지 않는다 — 유틸리티 하나가 크기·행간·굵기·자간·폰트를 이미 결정한다.
 4. **폰트를 직접 지정하지 않는다.** `font-sans`, `font-[Pretendard]`, `style={{fontFamily}}` 전부 금지. 이 시스템은 본문 Pretendard + 제목 고운바탕 두 개를 쓰는데, **어디서 갈아타는지는 타이포 유틸리티가 이미 정해뒀다** — `text-display`(40)와 `text-h1`(32)만 고운바탕, `text-h2`(24) 이하는 전부 Pretendard. 사용처에서 고를 일이 없다. 숫자 강조처럼 예외가 필요하면 `font-display` 유틸리티를 쓴다.
 5. **고운바탕에 600(SemiBold)이 없다.** 400과 700뿐이다. `text-display`·`text-h1`은 둘 다 700이라 문제없지만, 고운바탕을 다른 자리에 손으로 얹으면서 500·600을 요구하지 않는다. 요구하면 브라우저가 700으로 올려버려서 굵기 위계가 뭉개진다.
@@ -14,7 +14,7 @@
 7. **모서리는 5단계만.** `rounded-sm`(8, 뱃지·체크박스) `rounded-md`(12, 버튼·인풋) `rounded-lg`(16, 카드·팝오버) `rounded-xl`(24, 모달) `rounded-full`.
 8. **포커스 링을 컴포넌트에 넣지 않는다.** 전역 `:focus-visible`이 이미 처리한다. `focus:ring-*`, `focus-visible:outline-*` 추가 금지.
 9. **다크모드 클래스를 직접 쓰지 않는다.** `dark:bg-...` 금지. 시맨틱 토큰이 테마별로 이미 다른 값을 갖는다.
-10. **장식색(`accent` 라임, 장식 팩의 `blossom`/`water` 등)을 텍스트로 쓰지 않는다.** 대비 미달. 채우기·테두리·장식 전용. `accent`는 코어라 항상 있고, `blossom`/`water`는 선택적 장식 팩이 있어야만 존재한다 — 프로젝트가 어떤 팩을 얹었는지 `app/`의 CSS import를 먼저 확인한다.
+10. **장식색(`accent` 라임)을 텍스트로 쓰지 않는다.** 대비 1.4:1. 채우기·장식·다크 텍스트 전용.
 11. **success는 초록이 아니라 청록.** 동작색이 연두라 초록 success는 구분이 안 된다. `text-success` 토큰을 그대로 쓴다.
 
 ## 컴포넌트 작성 방식

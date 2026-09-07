@@ -87,9 +87,6 @@
   --action-ring:   color-mix(in oklab, var(--color-lime-700) 40%, transparent);
 
   --accent:        var(--color-lime-400);   /* 장식 전용. 라이트에서 텍스트 금지 */
-  /* blossom·water 등 추가 장식 토큰은 여기 없다 — 선택적 "장식 팩"(registry/accents/*.css)이
-     tokens 위에 얹으면서 정의한다. 팩을 안 쓰면 존재하지 않는 토큰이니 그런 유틸은 쓰지 않는다.
-     자세한 건 DESIGN.md "장식 팩" 절. */
 
   --danger:       var(--color-danger-light);
   --danger-hover: #93261c;   /* danger 솔리드 버튼 호버 (더 어둡게) */
