@@ -6,7 +6,7 @@
 ## 절대 규칙
 
 1. **임의값 문법 금지.** `bg-[#c9d96b]`, `p-[13px]`, `text-[15px]`, `rounded-[10px]` 전부 금지. 필요한 토큰이 없으면 만들어 쓰지 말고 **"토큰이 없습니다"라고 말하고 멈춘다.** 예외: 자손 선택자 변형(`[&>svg]:...`, `data-[state=open]:...`)과 Radix 런타임 CSS 변수 참조(`w-(--radix-select-trigger-width)` 등 위치 계산용)는 디자인값 하드코딩이 아니므로 허용.
-2. **원시 색 금지.** `bg-lime-400`, `text-gray-500`, `border-slate-200` 같은 Tailwind 기본 팔레트나 원시 스케일을 컴포넌트에서 직접 쓰지 않는다. 시맨틱 토큰만: `bg-bg` `bg-bg-inset` `bg-surface` `bg-surface-raised` `bg-fg` · `text-fg` `text-bg` `text-fg-muted` `text-fg-subtle` · `border-border` `border-border-strong` · `bg-action` `bg-action-hover` `bg-action-soft` `text-action` `text-fg-on-action` · `bg-danger` `bg-warning` `bg-success` `bg-info` · `text-danger` `text-warning` `text-success` `text-info` · `text-fg-on-danger` `text-fg-on-solid` (채도 높은 채움 위 텍스트) · `bg-accent` `bg-overlay`. 토큰에 불투명도 단축(`bg-action-soft/60`)은 허용, 임의값(`bg-[...]`)은 금지.
+2. **원시 색 금지.** `bg-lime-400`, `text-gray-500`, `border-slate-200` 같은 Tailwind 기본 팔레트나 원시 스케일을 컴포넌트에서 직접 쓰지 않는다. 시맨틱 토큰만: `bg-bg` `bg-bg-inset` `bg-surface` `bg-surface-raised` `bg-fg` · `text-fg` `text-bg` `text-fg-muted` `text-fg-subtle` · `border-border` `border-border-strong` · `bg-action` `bg-action-hover` `bg-action-soft` `bg-hover` `text-action` `text-fg-on-action` · `bg-danger` `bg-warning` `bg-success` `bg-info` · `text-danger` `text-warning` `text-success` `text-info` · `text-fg-on-danger` `text-fg-on-solid` (채도 높은 채움 위 텍스트) · `bg-accent` `text-fg-on-accent` (accent 채움 위 텍스트·아이콘) · `bg-overlay`. 토큰에 불투명도 단축(`bg-action-soft/60`)은 허용, 임의값(`bg-[...]`)은 금지.
 3. **타이포는 정해진 유틸리티만.** 본문/제목 10종: `text-display` `text-h1` `text-h2` `text-h3` `text-body-lg` `text-body` `text-body-sm` `text-label` `text-caption` `text-code`. 컨트롤 라벨 3종(버튼 등 size 변형 안에서만): `text-label-sm` `text-label-md` `text-label-lg`. 아이콘 크기 3종: `icon-sm`(16) `icon-md`(18) `icon-lg`(20) — 텍스트와 같은 px로 맞추지 말고 한 단계 키운다. 어디에도 `font-bold`, `leading-tight`, `tracking-wide` 등을 덧붙이지 않는다 — 유틸리티 하나가 크기·행간·굵기·자간·폰트를 이미 결정한다.
 4. **폰트를 직접 지정하지 않는다.** `font-sans`, `font-[Pretendard]`, `style={{fontFamily}}` 전부 금지. 이 시스템은 본문 Pretendard + 제목 고운바탕 두 개를 쓰는데, **어디서 갈아타는지는 타이포 유틸리티가 이미 정해뒀다** — `text-display`(40)와 `text-h1`(32)만 고운바탕, `text-h2`(24) 이하는 전부 Pretendard. 사용처에서 고를 일이 없다. 숫자 강조처럼 예외가 필요하면 `font-display` 유틸리티를 쓴다.
 5. **고운바탕에 600(SemiBold)이 없다.** 400과 700뿐이다. `text-display`·`text-h1`은 둘 다 700이라 문제없지만, 고운바탕을 다른 자리에 손으로 얹으면서 500·600을 요구하지 않는다. 요구하면 브라우저가 700으로 올려버려서 굵기 위계가 뭉개진다.
@@ -14,7 +14,7 @@
 7. **모서리는 5단계만.** `rounded-sm`(8, 뱃지·체크박스) `rounded-md`(12, 버튼·인풋) `rounded-lg`(16, 카드·팝오버) `rounded-xl`(24, 모달) `rounded-full`.
 8. **포커스 링을 컴포넌트에 넣지 않는다.** 전역 `:focus-visible`이 이미 처리한다. `focus:ring-*`, `focus-visible:outline-*` 추가 금지.
 9. **다크모드 클래스를 직접 쓰지 않는다.** `dark:bg-...` 금지. 시맨틱 토큰이 테마별로 이미 다른 값을 갖는다.
-10. **장식색(`accent` 라임)을 텍스트로 쓰지 않는다.** 대비 1.4:1. 채우기·장식·다크 텍스트 전용.
+10. **장식색(`accent`)을 텍스트로 쓰지 않는다.** 테마마다 값이 다르고(day 올리브유 / night 짙은 올리브 / night-city 시안 / night-lavender 라벤더) 대비를 보장하지 않는다. 채우기·장식·다크 텍스트 전용. **accent 위에 글자·아이콘을 얹을 땐 `text-fg`가 아니라 `text-fg-on-accent`** — 밝은 채움 위 글자는 검정이어야 하고, 다크 테마의 `text-fg`는 흰색이라 안 보인다.
 11. **success는 초록이 아니라 청록.** 동작색이 연두라 초록 success는 구분이 안 된다. `text-success` 토큰을 그대로 쓴다.
 
 ## 컴포넌트 작성 방식
@@ -23,6 +23,8 @@
 - 모든 컴포넌트는 `className?: string`을 받아 `cn()`으로 마지막에 병합한다.
 - 드롭다운·다이얼로그·툴팁·탭·셀렉트는 **직접 구현하지 않고 Radix UI 프리미티브를 감싼다.** 키보드 내비게이션과 ARIA를 손으로 짜지 않는다.
 - 원자 컴포넌트는 상태를 갖지 않는다 (controlled 우선). 상태는 사용처에서.
+- **호버·하이라이트 배경은 `bg-hover`.** 보조/고스트 버튼 호버, 메뉴 하이라이트, 닫기 버튼 호버 전부. `bg-action-soft`는 "동작색 표시"(action 뱃지, 선택된 상태)에만 쓴다. 드래그 하이라이트(`::selection`)는 전역에서 처리하니 건드리지 않는다.
+- **지면 그라데이션을 컴포넌트에서 만들지 않는다.** 조명은 `--bg-scene` 토큰으로 body 에 한 번만 걸려 있다. `bg-gradient-*` 금지.
 - 새 컴포넌트를 만들기 전에 `components/ui/` 안에 비슷한 게 있는지 먼저 확인한다.
 
 ## 면 구분 (elevation)
@@ -35,7 +37,7 @@
 
 ## 새 화면을 만들 때
 
-1. 지면은 `bg-bg`, 콘텐츠 블록은 `bg-surface`로 감싼다.
+1. 지면색은 body 가 이미 칠한다 (`bg` + 조명 `--bg-scene`). **페이지 루트 div 에 `bg-bg` 를 다시 칠하지 않는다** — 불투명 지면이 조명을 통째로 가린다. `bg-bg` 는 헤더처럼 부분 영역에만. 콘텐츠 블록은 `bg-surface`로 감싼다.
 2. 제목은 `text-h2`, 본문은 `text-body`, 설명은 `text-body-sm text-fg-muted`.
 3. 주 동작 버튼은 화면당 **하나**. 나머지는 `secondary` / `ghost`.
 4. 유채색은 동작색 + 상태색 최대 2개, 총 3개를 넘기지 않는다.

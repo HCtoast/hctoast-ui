@@ -25,7 +25,7 @@ jaewon-ui/
 ### 확정 사항 요약 (자세한 건 파일에)
 
 - Next.js(App Router) + TypeScript + **Tailwind CSS v4**
-- 테마 3종: `day`(아이보리 `#f7f4ea` + 딥올리브 `#5f6e1a`) / `night`(`#0c0c0d` + 라임 `#c9d96b`) / `night-blue`(`#020715`). `data-theme` 속성으로 전환, 미지정 시 `prefers-color-scheme`
+- 테마 3종: `day`(아이보리 `#f7f4ea` + 딥올리브 `#5f6e1a`) / `night`(`#0c0c0d` + 라임 `#c9d96b`) / `night-city`(강철 남색 `#0b1420` + 시안 accent) / `night-lavender`(청보라 `#0f1540` + 라벤더 accent). `data-theme` 속성으로 전환, 미지정 시 `prefers-color-scheme`
 - 본문 폰트 **Pretendard**(npm), 제목 폰트 **고운바탕**(Google Fonts). 고운바탕은 굵기가 400·700 둘뿐이라 `text-display`(40)와 `text-h1`(32)에만 쓴다. `text-h2`(24) 이하는 전부 Pretendard
 - 간격 8의 배수, 모서리 12px부터(sm 8 / md 12 / lg 16 / xl 24 / full), 타이포 유틸 10종 고정
 - 컴포넌트는 **cva**로 변형 정의, `cn()`으로 className 병합, 접근성은 **Radix UI**에 위임

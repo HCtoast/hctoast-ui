@@ -53,7 +53,7 @@ function DialogContent({
           <DialogPrimitive.Close
             data-slot="dialog-close"
             aria-label="닫기"
-            className="absolute right-4 top-4 inline-flex size-8 items-center justify-center rounded-md text-fg-muted transition-base hover:bg-action-soft hover:text-fg [&_svg]:icon-sm"
+            className="absolute right-4 top-4 inline-flex size-8 items-center justify-center rounded-md text-fg-muted transition-base hover:bg-hover hover:text-fg [&_svg]:icon-sm"
           >
             <X />
           </DialogPrimitive.Close>

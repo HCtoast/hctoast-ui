@@ -16,7 +16,7 @@ const contentSurface =
   "z-50 min-w-40 overflow-hidden rounded-lg border border-border bg-surface-raised p-2 text-fg shadow-e2";
 
 const itemBase =
-  "relative flex cursor-default select-none items-center gap-2 rounded-md px-2 py-2 text-body-sm outline-none transition-base data-[highlighted]:bg-action-soft data-[highlighted]:text-fg data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:icon-sm [&>svg]:shrink-0";
+  "relative flex cursor-default select-none items-center gap-2 rounded-md px-2 py-2 text-body-sm outline-none transition-base data-[highlighted]:bg-hover data-[highlighted]:text-fg data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:icon-sm [&>svg]:shrink-0";
 
 function DropdownMenuContent({
   className,
@@ -158,7 +158,7 @@ function DropdownMenuSubTrigger({
       data-slot="dropdown-menu-sub-trigger"
       className={cn(
         itemBase,
-        "data-[state=open]:bg-action-soft",
+        "data-[state=open]:bg-hover",
         inset && "pl-8",
         className,
       )}

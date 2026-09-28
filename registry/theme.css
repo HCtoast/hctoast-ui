@@ -13,13 +13,20 @@
   --color-lime-100: #eef4c9;
   --color-lime-200: #e2ec9f;
   --color-lime-300: #d6e388;
-  --color-lime-400: #c9d96b;  /* ★ 시그니처 */
+  --color-lime-400: #c9d96b;  /* ★ 다크 시그니처 (night 동작색) */
   --color-lime-500: #adbf4a;
   --color-lime-600: #8a9c2c;
-  --color-lime-700: #5f6e1a;  /* ★ 라이트 동작색 */
+  --color-lime-700: #5f6e1a;
   --color-lime-800: #4c5814;
   --color-lime-900: #333c0d;
   --color-lime-950: #14180a;
+
+  /* 올리브유 (day 시그니처) — 이탈리아 올리브 사이트류의 노란 올리브.
+     라임보다 색상각을 조금 붉은 쪽(h65)으로 틀었다. 시그니처는 day=올리브, night=라임으로
+     갈리고, 같은 초록 계열이라 명도 차이만 크게 난다. 레퍼런스: reference/day/ */
+  --color-olive-400: #a1ab2b;  /* ★ day 장식(accent). 텍스트 금지 (아이보리 위 2.3:1) */
+  --color-olive-600: #656c1b;  /* ★ day 동작색. 흰 글자 5.7:1, bg-inset 위 텍스트 4.5:1 */
+  --color-olive-700: #4f5515;  /* day 동작색 호버 */
 
   /* 아이보리 (라이트 지면) */
   --color-ivory-50:  #fffdf7;
@@ -33,7 +40,7 @@
   --color-ivory-800: #3b3931;
   --color-ivory-900: #1c1b16;
 
-  /* 뉴트럴 다크 (기본 다크 지면) */
+  /* 뉴트럴 다크 (기본 다크 지면 — night 는 "저조도": 지면은 그대로, 빛나는 것만 내린다) */
   --color-ink-50:  #ececed;
   --color-ink-100: #d4d4d6;
   --color-ink-200: #a1a1a6;
@@ -45,13 +52,29 @@
   --color-ink-800: #151517;
   --color-ink-900: #0c0c0d;
 
-  /* 블루 다크 (대체 다크 지면 — 블루라이트 필터 켠 환경용) */
-  --color-midnight-50:  #e7eaf2;
-  --color-midnight-200: #9aa3ba;
-  --color-midnight-600: #1e2846;
-  --color-midnight-700: #121a32;
-  --color-midnight-800: #0a1024;
-  --color-midnight-900: #020715;
+  /* 강철 남색 (night-city 지면 — 사이버펑크 2077, 비 젖은 밤. 레퍼런스: reference/night-city/) */
+  --color-steel-50:  #e3ecf2;
+  --color-steel-200: #93adc0;
+  --color-steel-300: #5d7789;
+  --color-steel-400: #2f5673;
+  --color-steel-500: #223d54;
+  --color-steel-600: #182f44;
+  --color-steel-700: #112132;
+  --color-steel-800: #0b1420;
+  --color-steel-900: #070d16;
+  --color-cyan-500:  #42a5be;  /* ★ night-city 장식(accent). 네온·홀로그램. 쨍하지 않게 가라앉힌 값 */
+
+  /* 청보라 (night-lavender 지면 — 명조 호나미 시티. 레퍼런스: reference/night-lavender/) */
+  --color-dusk-50:  #eceaf8;
+  --color-dusk-200: #b3b1dd;
+  --color-dusk-300: #7f7fb5;
+  --color-dusk-400: #4e4494;
+  --color-dusk-500: #29306e;
+  --color-dusk-600: #1d2559;
+  --color-dusk-700: #151c49;
+  --color-dusk-800: #0f1540;
+  --color-dusk-900: #0a0e2c;
+  --color-wisteria-300: #b39be0;  /* ★ night-lavender 장식(accent). 등나무 라벤더 벚꽃 */
 
   /* 상태색 — 라임과 색상이 겹치지 않도록 의도적으로 분리 */
   --color-danger-light:  #b03a2e;
@@ -62,6 +85,24 @@
   --color-success-dark:  #57c9a8;
   --color-info-light:    #3f5f9e;
   --color-info-dark:     #8fb0e8;
+
+  /* 저조도(night) 상태색 — *-dark 에서 명도를 한 단계 내린 값 */
+  --color-danger-dim:  #d4766b;
+  --color-warning-dim: #cfa040;
+  --color-success-dim: #4bb092;
+  --color-info-dim:    #7f9dd2;
+
+  /* night-city 상태색 — 색상은 유지, 채도·명도를 accent 시안과 같은 대역으로 가라앉힘.
+     danger 산호(아라사카 간판), warning 호박. 텍스트 4.5:1, 솔리드 위 어두운 글자 4.5:1 이상 */
+  --color-danger-city:  #e07f76;
+  --color-warning-city: #d4a24f;
+  --color-success-city: #4fae95;
+  --color-info-city:    #7396d9;
+
+  /* night-lavender 상태색 — 등불(산호·호박) + 물·간판 하늘색 */
+  --color-danger-lavender:  #ff8a76;
+  --color-warning-lavender: #f2b544;
+  --color-info-lavender:    #93ace4;   /* success 는 *-dark 청록 */
 }
 
 /* ---------- 2. 시맨틱 토큰 — 컴포넌트는 오직 이것만 참조 ---------- */
@@ -80,13 +121,14 @@
   --fg-on-action:  #ffffff;
   --fg-on-danger:  #ffffff;   /* danger 솔리드 위 텍스트 */
   --fg-on-solid:   #ffffff;   /* 채도 높은 채움(솔리드 뱃지 등) 위 텍스트 */
+  --fg-on-accent:  var(--color-ivory-900);   /* accent 채움 위 텍스트·아이콘. 밝은 채움이면 검정, 어두우면 밝게 */
 
-  --action:        var(--color-lime-700);
-  --action-hover:  var(--color-lime-800);
+  --action:        var(--color-olive-600);
+  --action-hover:  var(--color-olive-700);
   --action-soft:   var(--color-lime-100);   /* 연한 배경 (뱃지/선택 상태) */
-  --action-ring:   color-mix(in oklab, var(--color-lime-700) 40%, transparent);
+  --action-ring:   color-mix(in oklab, var(--color-olive-600) 40%, transparent);
 
-  --accent:        var(--color-lime-400);   /* 장식 전용. 라이트에서 텍스트 금지 */
+  --accent:        var(--color-olive-400);  /* 장식 전용. 라이트에서 텍스트 금지 */
 
   --danger:       var(--color-danger-light);
   --danger-hover: #93261c;   /* danger 솔리드 버튼 호버 (더 어둡게) */
@@ -96,6 +138,14 @@
 
   --overlay: rgb(28 27 22 / 0.45);   /* 모달 백드롭 */
 
+  /* 조명(scene) — 지면 단색 위에 덧칠하는 그라데이션 층. body 배경 이미지로 한 번만 건다.
+     day = 위에서 넓고 은은하게 내려오는 햇살. 구석 글로우는 안 어울려서 뺐다 */
+  --bg-scene: radial-gradient(120% 80% at 50% 0%, rgb(255 232 150 / 0.20), transparent 100%);
+  /* 호버 = 빛이 스치는 뉴트럴 리프트. action-soft(동작색 표시)와 역할을 분리한다 */
+  --hover:     color-mix(in oklab, var(--fg) 8%, transparent);
+  /* 드래그 하이라이트 = 그 테마의 빛(accent) 30% */
+  --selection: color-mix(in oklab, var(--accent) 30%, transparent);
+
   --shadow-1: 0 1px 2px rgb(28 27 22 / 0.06);
   --shadow-2: 0 2px 8px rgb(28 27 22 / 0.08);
   --shadow-3: 0 8px 24px rgb(28 27 22 / 0.10);
@@ -103,7 +153,10 @@
   color-scheme: light;
 }
 
-/* night-neutral — 기본 다크 (day와 페어) */
+/* night — 저조도 다크 (day와 페어).
+   "어두움 + 컬러도 어두운 쪽". 뉴트럴 지면은 그대로 두고 글자·동작색·상태색을
+   한두 단계 내려 눈부심을 줄인다. 동작색은 라임이 아니라 올리브유(lime-600) —
+   day 올리브의 어두운 판. 밝은 라임과 분위기는 night-city / night-lavender 가 맡는다. */
 [data-theme="night"] {
   --bg:            var(--color-ink-900);
   --bg-inset:      #08080a;
@@ -112,27 +165,32 @@
   --border:        var(--color-ink-600);
   --border-strong: var(--color-ink-500);
 
-  --fg:            var(--color-ink-50);
-  --fg-muted:      var(--color-ink-200);
-  --fg-subtle:     var(--color-ink-300);
-  --fg-on-action:  var(--color-lime-950);
-  --fg-on-danger:  #1c130f;   /* 살몬 danger-dark 위, AA 통과하는 어두운 값 */
+  --fg:            #d9d9db;   /* ink-50 보다 한 단계 어둡게 (13.9:1) */
+  --fg-muted:      #97979c;
+  --fg-subtle:     #66666c;
+  --fg-on-action:  var(--color-lime-950);   /* lime-600 위 5.9:1 */
+  --fg-on-danger:  #1c130f;
   --fg-on-solid:   #1c130f;
+  --fg-on-accent:  var(--color-ink-50);   /* lime-700 은 어두운 채움 (4.8:1) */
 
-  --action:        var(--color-lime-400);
-  --action-hover:  var(--color-lime-300);
-  --action-soft:   color-mix(in oklab, var(--color-lime-400) 16%, transparent);
-  --action-ring:   color-mix(in oklab, var(--color-lime-400) 50%, transparent);
+  --action:        var(--color-lime-600);
+  --action-hover:  #9aad38;   /* lime-600 과 lime-500 사이 */
+  --action-soft:   color-mix(in oklab, var(--color-lime-600) 14%, transparent);
+  --action-ring:   color-mix(in oklab, var(--color-lime-600) 50%, transparent);
 
-  --accent:        var(--color-lime-400);
+  --accent:        var(--color-lime-700);
 
-  --danger:       var(--color-danger-dark);
-  --danger-hover: #f4a99d;   /* 다크는 호버를 더 밝게 */
-  --warning: var(--color-warning-dark);
-  --success: var(--color-success-dark);
-  --info:    var(--color-info-dark);
+  --danger:       var(--color-danger-dim);
+  --danger-hover: #e08d83;
+  --warning: var(--color-warning-dim);
+  --success: var(--color-success-dim);
+  --info:    var(--color-info-dim);
 
   --overlay: rgb(0 0 0 / 0.6);
+
+  --bg-scene:  none;   /* 저조도의 정체성은 "빛이 없음" */
+  --hover:     color-mix(in oklab, var(--fg) 8%, transparent);
+  --selection: color-mix(in oklab, var(--accent) 30%, transparent);
 
   --shadow-1: 0 1px 2px rgb(0 0 0 / 0.40);
   --shadow-2: 0 2px 8px rgb(0 0 0 / 0.45);
@@ -141,40 +199,102 @@
   color-scheme: dark;
 }
 
-/* night-blue — 대체 다크 (블루라이트 필터 환경) */
-[data-theme="night-blue"] {
-  --bg:            var(--color-midnight-900);
-  --bg-inset:      #01040e;
-  --surface:       var(--color-midnight-800);
-  --surface-raised:var(--color-midnight-700);
-  --border:        var(--color-midnight-600);
-  --border-strong: #2b3a63;
+/* night-city — 사이버펑크 2077 나이트시티. 비 젖은 강철 남색 밤 + 시안 네온.
+   (구 night-blue 를 대체. 파란 조명 레퍼런스만 따랐고 초록 조명은 취향 밖.)
+   라임을 가장 밝게 쓰는 테마 — 파란 밤 위에서 라임이 네온 간판처럼 튄다.
+   표면은 젖은 유리처럼 살짝 비친다(86% / 92%) — 조명 층이 카드 너머로 스며든다. */
+[data-theme="night-city"] {
+  --bg:            var(--color-steel-800);
+  --bg-inset:      var(--color-steel-900);
+  --surface:       rgb(17 33 50 / 0.86);   /* steel-700 */
+  --surface-raised:rgb(24 47 68 / 0.92);   /* steel-600 */
+  --border:        var(--color-steel-500);
+  --border-strong: var(--color-steel-400);
 
-  --fg:            var(--color-midnight-50);
-  --fg-muted:      var(--color-midnight-200);
-  --fg-subtle:     #6c7691;
+  --fg:            var(--color-steel-50);
+  --fg-muted:      var(--color-steel-200);
+  --fg-subtle:     var(--color-steel-300);
   --fg-on-action:  var(--color-lime-950);
   --fg-on-danger:  #1c130f;
   --fg-on-solid:   #1c130f;
+  --fg-on-accent:  #06202a;
 
   --action:        var(--color-lime-400);
   --action-hover:  var(--color-lime-300);
-  --action-soft:   color-mix(in oklab, var(--color-lime-400) 16%, transparent);
+  --action-soft:   color-mix(in oklab, var(--color-lime-400) 14%, transparent);
   --action-ring:   color-mix(in oklab, var(--color-lime-400) 50%, transparent);
 
-  --accent:        var(--color-lime-400);
+  --accent:        var(--color-cyan-500);
 
-  --danger:       var(--color-danger-dark);
-  --danger-hover: #f4a99d;
-  --warning: var(--color-warning-dark);
-  --success: var(--color-success-dark);
-  --info:    var(--color-info-dark);
+  --danger:       var(--color-danger-city);
+  --danger-hover: #ea968e;
+  --warning: var(--color-warning-city);
+  --success: var(--color-success-city);
+  --info:    var(--color-info-city);
 
-  --overlay: rgb(1 4 14 / 0.66);
+  --overlay: rgb(4 9 16 / 0.70);
+
+  /* 위는 어둡고, 아래 물웅덩이에 시안 네온이 비친다. 왼쪽 아래 산호 네온은 아주 희미하게 */
+  --bg-scene:
+    radial-gradient(70% 40% at 50% 100%, rgb(66 165 190 / 0.14), transparent 70%),
+    radial-gradient(40% 30% at 15% 85%, rgb(224 127 118 / 0.06), transparent 70%),
+    linear-gradient(180deg, #070d16 0%, #0b1420 50%, #0e1b2c 100%);
+  --hover:     color-mix(in oklab, var(--fg) 8%, transparent);
+  --selection: color-mix(in oklab, var(--accent) 30%, transparent);
 
   --shadow-1: 0 1px 2px rgb(0 0 0 / 0.50);
   --shadow-2: 0 2px 8px rgb(0 0 0 / 0.55);
   --shadow-3: 0 8px 24px rgb(0 0 0 / 0.65);
+
+  color-scheme: dark;
+}
+
+/* night-lavender — 명조 호나미 시티. 청보라 밤하늘 + 등나무 라벤더 벚꽃 + 등불.
+   세 색(벚꽃·가지·잎)을 나란히 쓰지 않고 역할을 나눈다:
+   밤하늘 = 뉴트럴 램프(청보라) / 벚꽃 = accent + 글자 램프의 라벤더 언더톤 /
+   가지 = border-strong(밤빛 아래 가지는 갈색이 아니라 보라) / 잎 = action 라임.
+   지면은 night 답게 어둡고(l12), 밝은 분위기는 조명(등불 글로우)이 맡는다. */
+[data-theme="night-lavender"] {
+  --bg:            var(--color-dusk-800);
+  --bg-inset:      var(--color-dusk-900);
+  --surface:       var(--color-dusk-700);
+  --surface-raised:var(--color-dusk-600);
+  --border:        var(--color-dusk-500);
+  --border-strong: var(--color-dusk-400);
+
+  --fg:            var(--color-dusk-50);
+  --fg-muted:      var(--color-dusk-200);
+  --fg-subtle:     var(--color-dusk-300);
+  --fg-on-action:  var(--color-lime-950);
+  --fg-on-danger:  #1c130f;
+  --fg-on-solid:   #1c130f;
+  --fg-on-accent:  #1a1533;
+
+  --action:        #c4d36a;   /* lime-400 보다 살짝 낮춰 라벤더와 같은 빛 아래 */
+  --action-hover:  #d3df84;
+  --action-soft:   color-mix(in oklab, #c4d36a 14%, transparent);
+  --action-ring:   color-mix(in oklab, #c4d36a 50%, transparent);
+
+  --accent:        var(--color-wisteria-300);
+
+  --danger:       var(--color-danger-lavender);
+  --danger-hover: #ffa494;
+  --warning: var(--color-warning-lavender);
+  --success: var(--color-success-dark);
+  --info:    var(--color-info-lavender);
+
+  --overlay: rgb(13 21 51 / 0.70);
+
+  /* 오른쪽 위 등불 온기 + 위에서 아래로 청보라 → 보라 하늘 */
+  --bg-scene:
+    radial-gradient(60% 45% at 80% 0%, rgb(255 190 120 / 0.16), transparent 70%),
+    linear-gradient(180deg, #0c1238 0%, #121648 55%, #241a4e 100%);
+  --hover:     color-mix(in oklab, var(--fg) 8%, transparent);
+  --selection: color-mix(in oklab, var(--accent) 30%, transparent);
+
+  --shadow-1: 0 1px 2px rgb(5 8 25 / 0.45);
+  --shadow-2: 0 2px 8px rgb(5 8 25 / 0.50);
+  --shadow-3: 0 8px 24px rgb(5 8 25 / 0.60);
 
   color-scheme: dark;
 }
@@ -185,16 +305,20 @@
     --bg: var(--color-ink-900);      --bg-inset: #08080a;
     --surface: var(--color-ink-800); --surface-raised: var(--color-ink-700);
     --border: var(--color-ink-600);  --border-strong: var(--color-ink-500);
-    --fg: var(--color-ink-50);       --fg-muted: var(--color-ink-200);
-    --fg-subtle: var(--color-ink-300); --fg-on-action: var(--color-lime-950);
-    --fg-on-danger: #1c130f; --fg-on-solid: #1c130f;
-    --action: var(--color-lime-400); --action-hover: var(--color-lime-300);
-    --action-soft: color-mix(in oklab, var(--color-lime-400) 16%, transparent);
-    --action-ring: color-mix(in oklab, var(--color-lime-400) 50%, transparent);
-    --danger: var(--color-danger-dark);   --danger-hover: #f4a99d;
-    --warning: var(--color-warning-dark);
-    --success: var(--color-success-dark); --info: var(--color-info-dark);
+    --fg: #d9d9db;                   --fg-muted: #97979c;
+    --fg-subtle: #66666c;            --fg-on-action: var(--color-lime-950);
+    --fg-on-danger: #1c130f; --fg-on-solid: #1c130f; --fg-on-accent: var(--color-ink-50);
+    --action: var(--color-lime-600); --action-hover: #9aad38;
+    --action-soft: color-mix(in oklab, var(--color-lime-600) 14%, transparent);
+    --action-ring: color-mix(in oklab, var(--color-lime-600) 50%, transparent);
+    --accent: var(--color-lime-700);
+    --danger: var(--color-danger-dim);    --danger-hover: #e08d83;
+    --warning: var(--color-warning-dim);
+    --success: var(--color-success-dim);  --info: var(--color-info-dim);
     --overlay: rgb(0 0 0 / 0.6);
+    --bg-scene: none;
+    --hover: color-mix(in oklab, var(--fg) 8%, transparent);
+    --selection: color-mix(in oklab, var(--accent) 30%, transparent);
     --shadow-1: 0 1px 2px rgb(0 0 0 / 0.40);
     --shadow-2: 0 2px 8px rgb(0 0 0 / 0.45);
     --shadow-3: 0 8px 24px rgb(0 0 0 / 0.55);
@@ -217,11 +341,13 @@
   --color-fg-on-action:  var(--fg-on-action);
   --color-fg-on-danger:  var(--fg-on-danger);
   --color-fg-on-solid:   var(--fg-on-solid);
+  --color-fg-on-accent:  var(--fg-on-accent);
   --color-danger-hover:  var(--danger-hover);
   --color-overlay:       var(--overlay);
   --color-action:        var(--action);
   --color-action-hover:  var(--action-hover);
   --color-action-soft:   var(--action-soft);
+  --color-hover:         var(--hover);        /* 호버 배경. hover:bg-hover */
   --color-accent:        var(--accent);
   --color-danger:        var(--danger);
   --color-warning:       var(--warning);
@@ -333,6 +459,9 @@
   html { -webkit-text-size-adjust: 100%; }
   body {
     background-color: var(--bg);
+    /* 조명 층. 단색 지면 위에 그라데이션을 덧칠한다. 스크롤해도 조명은 고정 */
+    background-image: var(--bg-scene);
+    background-attachment: fixed;
     color: var(--fg);
     font-family: var(--font-sans);
     /* text-body 와 동일한 값. 타이포 유틸은 @utility 로 정의돼 있어
@@ -347,7 +476,7 @@
     outline-offset: 2px;
     border-radius: var(--radius-md);
   }
-  ::selection { background: var(--action-soft); color: var(--fg); }
+  ::selection { background: var(--selection); color: var(--fg); }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;

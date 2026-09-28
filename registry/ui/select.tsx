@@ -122,7 +122,7 @@ function SelectItem({
       data-slot="select-item"
       className={cn(
         "relative flex cursor-default select-none items-center rounded-md py-2 pl-8 pr-2 text-body-sm outline-none transition-base",
-        "data-[highlighted]:bg-action-soft data-[highlighted]:text-fg",
+        "data-[highlighted]:bg-hover data-[highlighted]:text-fg",
         "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         className,
       )}

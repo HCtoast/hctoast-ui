@@ -163,7 +163,7 @@ const RADII = [
 
 export default function Home() {
   return (
-    <div className="min-h-dvh bg-bg">
+    <div className="min-h-dvh">
       <header className="sticky top-0 z-40 border-b border-border bg-bg/90 backdrop-blur">
         <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-4 px-6 py-4">
           <span className="text-h3 text-fg">HCToast UI</span>
@@ -190,7 +190,7 @@ export default function Home() {
           <h1 className="text-display text-fg">컴포넌트 & 토큰</h1>
           <p className="text-body-lg text-fg-muted">
             개인 프로젝트에서 일관된 UI를 얻기 위한 디자인 시스템. day / night /
-            night-blue 세 테마, Pretendard 본문 + 고운바탕 제목, shadcn 레지스트리로
+            night-city / night-lavender 네 테마, Pretendard 본문 + 고운바탕 제목, shadcn 레지스트리로
             배포.
           </p>
           <p className="text-body-sm text-fg-subtle">

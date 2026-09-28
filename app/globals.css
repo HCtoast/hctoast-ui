@@ -7,3 +7,58 @@
 /* 규칙 문서(*.md)의 코드 예시에 들어있는 금지 클래스(font-[Pretendard] 등)를
    Tailwind 가 실제 유틸리티로 생성하지 않도록 마크다운을 스캔 대상에서 뺀다. */
 @source not "../**/*.md";
+
+/* ---- 실험(임시): night-city 후보 B / C — 지면 더 어둡게 + 조명. 결정 후 삭제 ---- */
+[data-theme="night-city-b"] {
+  --bg: #040a14;  --bg-inset: #02060e;
+  --surface: rgb(12 24 38 / 0.84);  --surface-raised: rgb(20 40 60 / 0.92);
+  --border: #1c3448;  --border-strong: #2c5068;
+  --fg: #e3ecf2;  --fg-muted: #93adc0;  --fg-subtle: #5d7789;
+  --fg-on-action: #14180a;  --fg-on-danger: #1c130f;  --fg-on-solid: #1c130f;  --fg-on-accent: #06202a;
+  --action: #c9d96b;  --action-hover: #d6e388;
+  --action-soft: color-mix(in oklab, #c9d96b 14%, transparent);
+  --action-ring: color-mix(in oklab, #c9d96b 50%, transparent);
+  --accent: #42a5be;
+  --danger: #e07f76;  --danger-hover: #ea968e;
+  --warning: #d4a24f;  --success: #4fae95;  --info: #7396d9;
+  --overlay: rgb(2 6 14 / 0.72);
+  /* B: 세기 2배. 광원은 화면 바닥 너머(105%) 그대로 — 물웅덩이 */
+  --bg-scene:
+    radial-gradient(80% 55% at 50% 105%, rgb(66 165 190 / 0.76), transparent 70%),
+    radial-gradient(50% 40% at 8% 95%, rgb(224 127 118 / 0.36), transparent 70%),
+    radial-gradient(40% 35% at 95% 5%, rgb(147 173 192 / 0.32), transparent 70%),
+    linear-gradient(180deg, #02060e 0%, #040a14 40%, #08182a 100%);
+  --hover: color-mix(in oklab, var(--fg) 8%, transparent);
+  --selection: color-mix(in oklab, var(--accent) 30%, transparent);
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.55);
+  --shadow-2: 0 2px 8px rgb(0 0 0 / 0.60);
+  --shadow-3: 0 8px 24px rgb(0 0 0 / 0.70);
+  color-scheme: dark;
+}
+
+[data-theme="night-city-c"] {
+  --bg: #040a14;  --bg-inset: #02060e;
+  --surface: rgb(12 24 38 / 0.84);  --surface-raised: rgb(20 40 60 / 0.92);
+  --border: #1c3448;  --border-strong: #2c5068;
+  --fg: #e3ecf2;  --fg-muted: #93adc0;  --fg-subtle: #5d7789;
+  --fg-on-action: #14180a;  --fg-on-danger: #1c130f;  --fg-on-solid: #1c130f;  --fg-on-accent: #06202a;
+  --action: #c9d96b;  --action-hover: #d6e388;
+  --action-soft: color-mix(in oklab, #c9d96b 14%, transparent);
+  --action-ring: color-mix(in oklab, #c9d96b 50%, transparent);
+  --accent: #42a5be;
+  --danger: #e07f76;  --danger-hover: #ea968e;
+  --warning: #d4a24f;  --success: #4fae95;  --info: #7396d9;
+  --overlay: rgb(2 6 14 / 0.72);
+  /* C: 광원을 화면 안으로. 원 중심 85%, 작고 진하게 — 젖은 도로에 비친 간판. 카드 뒤로 빛이 지나간다 */
+  --bg-scene:
+    radial-gradient(55% 40% at 50% 85%, rgb(66 165 190 / 0.55), transparent 70%),
+    radial-gradient(35% 30% at 10% 80%, rgb(224 127 118 / 0.28), transparent 70%),
+    radial-gradient(35% 30% at 92% 8%, rgb(147 173 192 / 0.28), transparent 70%),
+    linear-gradient(180deg, #02060e 0%, #040a14 40%, #08182a 100%);
+  --hover: color-mix(in oklab, var(--fg) 8%, transparent);
+  --selection: color-mix(in oklab, var(--accent) 30%, transparent);
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.55);
+  --shadow-2: 0 2px 8px rgb(0 0 0 / 0.60);
+  --shadow-3: 0 8px 24px rgb(0 0 0 / 0.70);
+  color-scheme: dark;
+}
