@@ -45,6 +45,18 @@
       ]
     },
     {
+      "name": "scene-from-photo",
+      "type": "registry:lib",
+      "title": "사진 → 조명(scene)",
+      "description": "사진에서 밝은 부분만 조명으로 구워 --bg-scene 값(그라데이션 + data URI)을 만든다. 조명 양·유리·밝기 비·채도·빛번짐 전부 옵션. 브라우저 canvas 전용.",
+      "files": [
+        {
+          "path": "registry/lib/scene-from-photo.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "button",
       "type": "registry:ui",
       "title": "Button",

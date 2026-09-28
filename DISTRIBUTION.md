@@ -150,6 +150,37 @@ Vercel 이 자동 재배포하며 `public/r/*.json` 재생성. 소비자는 **�
 - 오버레이 애니메이션(`animate-fade`/`animate-pop`) 실제 모션
 - `README.md` 가 create-next-app 기본값 — 교체 권장
 
+## 조명 사진(scene-from-photo)을 내 앱에서 쓰기
+
+```bash
+npx shadcn@latest add https://hctoast-ui.vercel.app/r/scene-from-photo.json
+```
+
+토큰 `--bg-scene` 은 theme.css 가 body 배경 이미지로 건다. 굽는 함수는 그 값 문자열을 만들어 줄 뿐이라,
+어디에 어떻게 저장·적용할지는 앱이 정한다(쇼케이스는 localStorage + `documentElement.style`).
+
+```ts
+import { bakeScene, composeScene, loadImage } from "@/lib/scene-from-photo";
+
+const img = await loadImage(file);                       // File | URL
+const baked = await bakeScene(img, {
+  width: 192,          // 96 빛만 / 192 실루엣 / 320 형체
+  coverage: 0.06,      // 조명 면적 2~15%
+  lightRatio: 6,       // 조명:바닥 밝기 비
+  lightSat: [0.4, 0.7],// 조명 채도 띠
+  bloom: 0.5,          // 빛번짐 세기
+  glassColor: [4, 10, 20], // 유리색 = 그 테마의 bg (night-lavender 면 [15, 21, 64])
+  textLuma: 0.4,       // 그 테마 fg-muted 의 상대 밝기 — 유리 최소값 계산용
+  bgLuma: 0.0034,      // 그 테마 bg 의 상대 밝기 — "밤 유지" 상한
+});
+const { scene, stats, warnings } = composeScene(baked, /* glass */ undefined); // glass 생략 = 바닥값 + 0.06
+document.documentElement.style.setProperty("--bg-scene", scene);
+// stats.glassFloor 이상만 허용된다 — 슬라이더 범위로 쓰면 된다. warnings 는 사용자에게 보여줄 문구.
+```
+
+`glassColor / textLuma / bgLuma` 를 다른 테마 값으로 주면 night-city 가 아닌 테마에서도 같은 규칙으로
+글자 대비와 "밤 유지"가 지켜진다. 굽기는 canvas 를 쓰므로 브라우저에서만 돈다(SSR 에서 호출하지 않는다).
+
 ## 새 프로젝트 시작 절차
 
 ```bash

@@ -10,7 +10,7 @@
  * 출력 조건
  *  1. 조명 면적   — 빛으로 읽히는 픽셀이 화면의 coverage(기본 6%). 사용자가 2~15% 로 조절.
  *                   면적이 이 값이 되는 밝기 문턱을 사진마다 역산한다.
- *  2. 밝기 비     — 조명 중앙값 : 바닥 중앙값 ≥ LIGHT_RATIO(6). gain 을 역산.
+ *  2. 밝기 비     — 조명 중앙값 : 바닥 중앙값 ≥ lightRatio(6). gain 을 역산.
  *  3. 밤 유지     — 바닥(조명 아닌 영역)의 합성 후 평균 밝기 ≤ 지면 토큰 밝기. 바닥 어둡기를 역산.
  *  4. 글자 대비   — 넓은 영역(p85)은 fg-muted 4.5:1. 이걸 지키는 최소 유리 불투명도가 glassFloor.
  *                   아주 밝은 점(p99)은 유리를 두껍게 하지 않고 톤 매핑으로 깎는다.
@@ -32,8 +32,12 @@ export const COVERAGE_RANGE: [number, number] = [0.02, 0.15];
 export const COVERAGE_DEFAULT = 0.06;
 export const GLASS_MAX = 0.92;
 
-const LIGHT_RATIO = 6; // 조명 : 바닥 밝기 비 목표
-const LIGHT_SAT: [number, number] = [0.4, 0.7];
+/** 기본값 — 전부 SceneOptions 로 덮어쓸 수 있다. 출처: 프리셋 발코니·젖은 유리에서 잰 값 */
+export const SCENE_DEFAULTS = {
+  lightRatio: 6,              // 조명 : 바닥 밝기 비 목표
+  lightSat: [0.4, 0.7] as [number, number], // 조명 채도 띠
+  bloom: 0.5,                 // 넓은 블러의 세기 0~1 (빛번짐 크기)
+} as const;
 const GLASS_DEFAULT: [number, number, number] = [4, 10, 20]; // night-city 지면
 const TEXT_LUMA_DEFAULT = 0.4; // fg-muted #93adc0
 const BG_LUMA_DEFAULT = 0.0034; // 지면 #040a14 — "밤 유지" 상한
@@ -73,6 +77,12 @@ export type SceneOptions = {
   textLuma?: number;
   /** 지면 토큰의 상대 밝기 — 바닥이 이보다 밝아지지 않게. 기본 #040a14 */
   bgLuma?: number;
+  /** 조명 : 바닥 밝기 비 목표. 기본 6 */
+  lightRatio?: number;
+  /** 조명 채도 띠 [min, max]. 기본 [0.4, 0.7] */
+  lightSat?: [number, number];
+  /** 빛번짐 세기 0~1. 기본 0.5 */
+  bloom?: number;
 };
 
 function srgbToLinear(c: number) {
@@ -123,6 +133,9 @@ export async function bakeScene(
   const glassColor = options.glassColor ?? GLASS_DEFAULT;
   const textLuma = options.textLuma ?? TEXT_LUMA_DEFAULT;
   const bgLuma = options.bgLuma ?? BG_LUMA_DEFAULT;
+  const lightRatioTarget = options.lightRatio ?? SCENE_DEFAULTS.lightRatio;
+  const lightSat = options.lightSat ?? SCENE_DEFAULTS.lightSat;
+  const bloom = clamp(options.bloom ?? SCENE_DEFAULTS.bloom, 0, 1);
   const warnings: string[] = [];
 
   const H = Math.max(8, Math.round((W * source.height) / source.width));
@@ -170,7 +183,7 @@ export async function bakeScene(
 
   // 2. 밝기 비 — 조명 중앙값이 바닥 중앙값(어둡힌 뒤)의 LIGHT_RATIO 배가 되게 gain 역산
   const groundAfter = groundMed * darkBase;
-  const gain = hasLights ? clamp((LIGHT_RATIO * Math.max(groundAfter, 0.01)) / Math.max(lightMed, 1e-4), 0.8, 4) : 0;
+  const gain = hasLights ? clamp((lightRatioTarget * Math.max(groundAfter, 0.01)) / Math.max(lightMed, 1e-4), 0.8, 4) : 0;
   const lightRatio = hasLights ? (lightMed * gain) / Math.max(groundAfter, 1e-4) : 0;
 
   // 지배 색상 + 겹침 경고
@@ -188,7 +201,7 @@ export async function bakeScene(
     let r = px[i * 4], g = px[i * 4 + 1], b = px[i * 4 + 2];
     if (isLight[i] && hasLights) {
       const [h, s, l] = rgbToHsl(r, g, b);
-      const s2 = s < 0.05 ? s : clamp(s, LIGHT_SAT[0], LIGHT_SAT[1]); // 무채색 빛(백열)은 그대로
+      const s2 = s < 0.05 ? s : clamp(s, lightSat[0], lightSat[1]); // 무채색 빛(백열)은 그대로
       [r, g, b] = hslToRgb(h, s2, l);
       r *= gain; g *= gain; b *= gain;
     } else {
@@ -206,7 +219,7 @@ export async function bakeScene(
   octx.filter = `blur(${blurS}px)`;
   octx.drawImage(base, 0, 0);
   octx.filter = `blur(${blurL}px)`;
-  octx.globalAlpha = 0.5;
+  octx.globalAlpha = bloom;
   octx.globalCompositeOperation = "lighter";
   octx.drawImage(base, 0, 0);
   octx.globalAlpha = 1; octx.globalCompositeOperation = "source-over"; octx.filter = "none";
