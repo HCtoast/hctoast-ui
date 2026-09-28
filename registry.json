@@ -145,6 +145,25 @@
       ]
     },
     {
+      "name": "dismiss",
+      "type": "registry:ui",
+      "title": "Dismiss",
+      "description": "동그란 X. corner(부모 오른쪽 위에 반쯤 걸침) / inline(칩·태그 안). sm 24 / md 32. aria-label 필수.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "https://hctoast-ui.vercel.app/r/tokens.json",
+        "https://hctoast-ui.vercel.app/r/cn.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/dismiss.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "separator",
       "type": "registry:ui",
       "title": "Separator",

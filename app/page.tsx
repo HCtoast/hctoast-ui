@@ -1,6 +1,7 @@
 import { ArrowRight, Plus, Trash2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { Dismiss } from "@/components/ui/dismiss";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -64,6 +65,7 @@ const NAV: { id: string; label: string }[] = [
   { id: "tokens", label: "토큰" },
   { id: "button", label: "Button" },
   { id: "badge", label: "Badge" },
+  { id: "dismiss", label: "Dismiss" },
   { id: "card", label: "Card" },
   { id: "input", label: "Input · Label" },
   { id: "separator", label: "Separator" },
@@ -332,6 +334,32 @@ export default function Home() {
               <Badge variant="danger-solid">danger</Badge>
               <Badge variant="info-solid">info</Badge>
             </div>
+          </Demo>
+        </DocSection>
+
+        <DocSection
+          id="dismiss"
+          title="Dismiss"
+          subtitle="동그란 X · corner는 부모(relative) 오른쪽 위에 반쯤 걸침 · inline은 칩·태그 안 · sm 24 / md 32"
+          register="dismiss"
+        >
+          <Demo>
+            <div className="relative rounded-lg border border-border bg-surface-raised p-4 text-body-sm text-fg shadow-e1">
+              썸네일·카드 항목
+              <Dismiss aria-label="항목 지우기" />
+            </div>
+            <div className="relative rounded-lg border border-border bg-surface-raised p-5 text-body text-fg shadow-e1">
+              md
+              <Dismiss aria-label="카드 닫기" size="md" />
+            </div>
+            <span className="inline-flex h-8 items-center gap-2 rounded-full bg-action-soft pl-3 pr-1 text-label-sm text-action">
+              필터: 완료
+              <Dismiss aria-label="완료 필터 해제" position="inline" />
+            </span>
+            <span className="inline-flex h-8 items-center gap-2 rounded-full bg-bg-inset pl-3 pr-1 text-label-sm text-fg-muted">
+              태그
+              <Dismiss aria-label="태그 제거" position="inline" />
+            </span>
           </Demo>
         </DocSection>
 

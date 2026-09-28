@@ -257,6 +257,10 @@ night 열은 저조도 값이다. night-city / night-lavender 의 전체 값은 
 
 soft 가 기본. solid 는 강조가 필요할 때만.
 
+### Dismiss (동그란 X)
+
+무언가를 없애는 작은 원형 버튼. `corner`는 부모(`relative`) 오른쪽 위에 반쯤 걸치고(`-right-2 -top-2`, border-strong + surface-raised + shadow-e1), `inline`은 칩·태그 흐름 안에 놓인다. 크기 sm 24(icon-sm) / md 32(icon-md). 호버는 `bg-hover`. **`aria-label`은 필수**이고 무엇을 없애는지 적는다("발코니 지우기", "완료 필터 해제"). 되돌릴 수 있는 동작(숨기기)과 없는 동작(지우기)은 라벨로 구분한다.
+
 ---
 
 ## 9. 조명 (scene)

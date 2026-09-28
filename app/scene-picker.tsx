@@ -2,9 +2,10 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { ImagePlus, RotateCcw, X } from "lucide-react";
+import { Eye, ImagePlus, RotateCcw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Dismiss } from "@/components/ui/dismiss";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import {
@@ -289,9 +290,8 @@ export function ScenePicker() {
                   />
                   <span className="max-w-28 truncate text-caption">{p.label}</span>
                 </button>
-                <button
-                  type="button"
-                  aria-label={`${p.label} 지우기`}
+                <Dismiss
+                  aria-label={p.kind === "preset" ? `${p.label} 숨기기` : `${p.label} 지우기`}
                   disabled={busy}
                   onClick={() => remove(p)}
                   className="absolute -right-2 -top-2 inline-flex size-6 items-center justify-center rounded-full border border-border-strong bg-surface-raised text-fg-muted shadow-e1 transition-base hover:bg-hover hover:text-fg disabled:opacity-50 [&_svg]:icon-sm"
