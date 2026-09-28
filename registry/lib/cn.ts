@@ -80,6 +80,7 @@ const twMerge = extendTailwindMerge({
       ],
       // icon-sm/md/lg 는 width+height 를 함께 세팅 → size/w/h 유틸과 충돌시킨다.
       size: ["icon-sm", "icon-md", "icon-lg"],
+      transition: [{ transition: ["base", "snap"] }],
     },
   },
 });

@@ -179,8 +179,8 @@ export function ScenePicker() {
         <h2 className="text-h3 text-fg">조명 사진 (night-city-c 실험)</h2>
         <p className="text-body-sm text-fg-muted">
           사진에서 가장 밝은 부분만 조명으로 남기고 빛번짐을 구워 유리 아래에 깐다. 어떤 사진이든
-          &ldquo;그 사진의 밤&rdquo;이 된다. 조명 양과 유리 두께만 조절할 수 있고, 유리는 글자가 읽히는
-          최소 두께 아래로 내려가지 않는다.
+          &ldquo;그 사진의 밤&rdquo;이 된다. 조명 양과 창밖 밝기만 조절할 수 있고, 밝기는 글자가 읽히는
+          최대치 위로 올라가지 않는다.
         </p>
       </div>
 
@@ -253,7 +253,7 @@ export function ScenePicker() {
               id="scene-coverage"
               min={COVERAGE_RANGE[0] * 100}
               max={COVERAGE_RANGE[1] * 100}
-              step={1}
+              snap={1}
               value={[Math.round(coverage * 100)]}
               onValueChange={([v]) => changeCoverage(v / 100)}
               disabled={busy}
@@ -262,19 +262,20 @@ export function ScenePicker() {
           </div>
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="scene-glass">유리 두께</Label>
+              <Label htmlFor="scene-glass">창밖 밝기</Label>
               <span className="text-caption text-fg-muted">
-                {Math.round((stats?.glass ?? floor) * 100)}% · 최소 {Math.round(floor * 100)}%
+                {Math.round((1 - (stats?.glass ?? floor)) * 100)}% · 최대 {Math.round((1 - floor) * 100)}%
               </span>
             </div>
+            {/* 유리 불투명도의 반대. 오른쪽 끝 = 그 사진에서 글자가 읽히는 최대 밝기 */}
             <Slider
               id="scene-glass"
-              min={Math.round(floor * 100)}
-              max={Math.round(GLASS_MAX * 100)}
-              step={1}
-              value={[Math.round((stats?.glass ?? floor) * 100)]}
-              onValueChange={([v]) => changeGlass(v / 100)}
-              aria-label="유리 두께"
+              min={Math.round((1 - GLASS_MAX) * 100)}
+              max={Math.round((1 - floor) * 100)}
+              snap={1}
+              value={[Math.round((1 - (stats?.glass ?? floor)) * 100)]}
+              onValueChange={([v]) => changeGlass(1 - v / 100)}
+              aria-label="창밖 밝기"
             />
           </div>
         </div>

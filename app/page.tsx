@@ -55,6 +55,7 @@ import {
 } from "@/components/ui/tooltip";
 
 import { ScenePicker } from "./scene-picker";
+import { SliderDemo } from "./slider-demo";
 import { ThemeControl } from "./theme-control";
 
 const REGISTRY = "https://hctoast-ui.vercel.app";
@@ -73,6 +74,7 @@ const NAV: { id: string; label: string }[] = [
   { id: "tooltip", label: "Tooltip" },
   { id: "select", label: "Select" },
   { id: "tabs", label: "Tabs" },
+  { id: "slider", label: "Slider" },
 ];
 
 function Snippet({ children }: { children: React.ReactNode }) {
@@ -565,6 +567,17 @@ export default function Home() {
                 <p className="text-body text-fg">토큰 탭 콘텐츠.</p>
               </TabsContent>
             </Tabs>
+          </Demo>
+        </DocSection>
+
+        <DocSection
+          id="slider"
+          title="Slider"
+          subtitle="Radix Slider 래퍼 · 손잡이 5종 · 드래그는 부드럽게, 놓으면 눈금에 스냅"
+          register="slider"
+        >
+          <Demo layout="col">
+            <SliderDemo />
           </Demo>
         </DocSection>
       </main>

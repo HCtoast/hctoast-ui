@@ -438,6 +438,13 @@
   transition-timing-function: var(--ease-out-soft);
   transition-duration: var(--duration-base);
 }
+/* 슬라이더 스냅 전용 — 손잡이가 눈금에 달라붙는 120ms. 레이아웃 속성(left)을 트랜지션하는
+   유일한 예외다. 절대 위치의 작은 손잡이 하나라 리플로 비용이 없다. 다른 곳에 쓰지 않는다. */
+@utility transition-snap {
+  transition-property: left, bottom;
+  transition-timing-function: var(--ease-out-soft);
+  transition-duration: var(--duration-fast);
+}
 
 /* ---------- 4-1. 오버레이 모션 ----------
    Radix 오버레이(Dialog / DropdownMenu / Popover / Tooltip / Select) 등장·퇴장.

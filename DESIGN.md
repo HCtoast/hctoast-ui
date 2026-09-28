@@ -211,6 +211,7 @@ night 열은 저조도 값이다. night-city / night-lavender 의 전체 값은 
 - **포커스 링은 전역 `:focus-visible`로 한 번만 정의.** 컴포넌트에서 개별 구현 금지. `outline: 2px solid var(--action); outline-offset: 2px`
 - 호버: 주 버튼은 `action-hover`, 그 외(보조·고스트·메뉴 항목)는 배경 `hover`(fg 8% 뉴트럴 리프트). `action-soft`는 호버에 쓰지 않는다 — 그건 "동작색 표시"(action 뱃지, 선택된 상태)다. 투명도(opacity) 변경으로 호버를 표현하지 않는다.
 - 드래그 하이라이트(`::selection`)는 `selection` 토큰(그 테마의 accent 30%). 전역 한 번만 정의.
+- **슬라이더 스냅**: 드래그 중엔 손잡이가 포인터를 그대로 따라오고, 놓는 순간 가까운 눈금(`snap`)에 달라붙는다. 붙는 120ms 만 `transition-snap`(left) — 레이아웃 속성을 트랜지션하는 **유일한 예외**. 절대 위치의 작은 손잡이라 리플로 비용이 없다. 다른 곳에 쓰지 않는다. 손잡이 변형 5종(dot·pill·ring·bar·knob)은 `thumb` prop.
 - 트랜지션은 `--duration-base 180ms` + `--ease-out-soft`가 기본. 색/그림자만 트랜지션하고 레이아웃 속성은 건드리지 않는다. 컴포넌트는 `transition-base` 유틸리티 하나로 적용한다 (Tailwind v4에 `--duration-*` 네임스페이스가 없어 `@utility`로 묶음). `transition-colors` 등 Tailwind 기본 트랜지션 유틸은 쓰지 않는다.
 - **오버레이 등장/퇴장** — Radix 오버레이(Dialog·DropdownMenu·Popover·Tooltip·Select)는 `animate-fade-in`/`animate-fade-out`(백드롭), `animate-pop-in`/`animate-pop-out`(패널)만 쓴다. 페이드 + 2% 스케일이 전부고 레이아웃 속성은 안 움직인다. `data-[state=open]:animate-* data-[state=closed]:animate-*` 로 건다. 별도 애니메이션 라이브러리(`tw-animate-css` 등)를 넣지 않는다.
 - `prefers-reduced-motion` 대응은 base 레이어에 이미 있음 (애니메이션 0.01ms로 무력화).
