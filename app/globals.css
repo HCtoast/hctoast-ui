@@ -8,7 +8,7 @@
    Tailwind 가 실제 유틸리티로 생성하지 않도록 마크다운을 스캔 대상에서 뺀다. */
 @source not "../**/*.md";
 
-/* ---- 실험(임시): night-city 후보 B / C — 지면 더 어둡게 + 조명. 결정 후 삭제 ---- */
+/* ---- 실험(임시): night-city 후보 B(조명 2배) / C(사진 + 유리). 결정 후 삭제 ---- */
 [data-theme="night-city-b"] {
   --bg: #040a14;  --bg-inset: #02060e;
   --surface: rgb(12 24 38 / 0.84);  --surface-raised: rgb(20 40 60 / 0.92);
@@ -49,12 +49,12 @@
   --danger: #e07f76;  --danger-hover: #ea968e;
   --warning: #d4a24f;  --success: #4fae95;  --info: #7396d9;
   --overlay: rgb(2 6 14 / 0.72);
-  /* C: 광원을 화면 안으로. 원 중심 85%, 작고 진하게 — 젖은 도로에 비친 간판. 카드 뒤로 빛이 지나간다 */
+  /* C: 사진 + 유리. 도시 야경 사진을 96px 로 줄여 블러·조명 강조를 구운 1.6KB WebP(data URI)를
+     맨 아래 깔고, 위 86% → 아래 72% 의 어두운 유리로 덮는다. 조명은 사진에서 나온다.
+     (임시: 사진 출처가 레퍼런스 스크린샷 — 확정 시 직접 찍은 사진/CC0 로 교체) */
   --bg-scene:
-    radial-gradient(55% 40% at 50% 85%, rgb(66 165 190 / 0.55), transparent 70%),
-    radial-gradient(35% 30% at 10% 80%, rgb(224 127 118 / 0.28), transparent 70%),
-    radial-gradient(35% 30% at 92% 8%, rgb(147 173 192 / 0.28), transparent 70%),
-    linear-gradient(180deg, #02060e 0%, #040a14 40%, #08182a 100%);
+    linear-gradient(180deg, rgb(4 10 20 / 0.86) 0%, rgb(4 10 20 / 0.72) 100%),
+    url("data:image/webp;base64,UklGRr4EAABXRUJQVlA4WAoAAAAwAAAAXwAANQAASUNDUMgBAAAAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADZBTFBIcQAAAA0hAklbvO2P6H/scNy2kSTJ3cC8NsANd4Lao7F1OIH6b8QETMDzLRwhNYzcUjjC7eWnYO7t8hAgAhnKYIbDIJjbIMEMMpZBJAGGuQVohtkFf9832GiCZDAbSwQSSsNgWLajlQYbSrBsSyitGKaWbdkAAFZQOCBWAgAAcBEAnQEqYAA2AD5pKpJFpCKhmfkWqEAGhLEAWX9xxm5Q1p7tcY+GmRiU2yC5wrHkzsN6OQZHK5cbJ8jmVZXwwFRswHQG9uePYNqnIS3R+qCWjL0SNHdnrH9THguApz9bZdP1/CpPq2z+5LDZowzpdCnsHuqgB8/7Fhv6slC0eUlfksQKpw1T0zhEhKvKxPc9Dgk3RAD+/wjXcEp6Q6Jkr3z+9pJuuBjoD1MucrIgWmp1UnV345N9JhWoMFvYbDlvMGGHv1AaA+irvLv9dJUOUX+Ty2wyHaChhzilmnr8hbP+boBZt847wvhQfuIQPi7r+v02IsrCZmndtb8ubspiE1RI814vGc2deYqMB+2XygpN70TnaKfwi194LDOZVWhyHyefXAVPtOoaDkUlRNPvi83pHuD6c8IBvICoM6Ak2B6Fygoa1mOCsve7akTCNVQvD2TFQ9XxVB8Ef2BKb7MP+8dksXZ6vxi5PtctWHnpcwMBB4wvpZfmmoD2i4aMk8uswGJRnJFghF8iUOXbbZujV13td6DzLnuAg/Ftl07nd8zTHazzy4CIf2ORrh9nM1v5qREBelgrnyP3VPay7WaOu9HwMDea8KxK3510cy4+i2k+GqaOd1wemwRbXxbLs6VBI2UMzsNWaYjOnQ96AjMbRg9MCVuh3XXHsuzx5fDGCD7Kk2mWS4aT8yOC/QHBJXB1nR9lKpdgbEE5Nte8IQWbT4u84Q35BzRzIoKbAGHx60vuHfqt9XrjXvzozlGmfNgG0FK83sHbtlMz2wxkqnfosPUaUwSAAA==");
   --hover: color-mix(in oklab, var(--fg) 8%, transparent);
   --selection: color-mix(in oklab, var(--accent) 30%, transparent);
   --shadow-1: 0 1px 2px rgb(0 0 0 / 0.55);
@@ -62,3 +62,6 @@
   --shadow-3: 0 8px 24px rgb(0 0 0 / 0.70);
   color-scheme: dark;
 }
+
+/* C 의 사진 층은 cover 로 채운다 (data-theme 은 <html> 에 있다) */
+[data-theme="night-city-c"] body { background-size: cover; background-position: center; }
