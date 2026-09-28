@@ -65,3 +65,7 @@
 
 /* C 의 사진 층은 cover 로 채운다 (data-theme 은 <html> 에 있다) */
 [data-theme="night-city-c"] body { background-size: cover; background-position: center; }
+
+/* "배경만 보기" — 조명 사진 선택기에서 켠다. 카드·헤더를 숨기고 조명만 남긴다. 돌아가기 바만 보인다 */
+[data-peek] header, [data-peek] main { visibility: hidden; }
+[data-peek] [data-slot="peek-bar"] { visibility: visible; }

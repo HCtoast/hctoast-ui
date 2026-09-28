@@ -106,6 +106,7 @@ export function ScenePicker() {
   const [busy, setBusy] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const [dragOver, setDragOver] = React.useState(false);
+  const [peek, setPeek] = React.useState(false); // 배경만 보기
   const dragDepth = React.useRef(0); // 자식 요소를 지날 때 enter/leave 가 번갈아 와서 깊이로 센다
   const inputRef = React.useRef<HTMLInputElement>(null);
   const bakeTimer = React.useRef<number | null>(null);
@@ -125,6 +126,19 @@ export function ScenePicker() {
     applyScene(active && result ? result.scene : null);
     return () => applyScene(null);
   }, [active, result]);
+
+  // 배경만 보기: <html data-peek> 로 카드·헤더를 숨긴다(globals.css). Esc 로 돌아온다
+  React.useEffect(() => {
+    const root = document.documentElement;
+    if (!(peek && active)) {
+      delete root.dataset.peek;
+      return;
+    }
+    root.dataset.peek = "";
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setPeek(false); };
+    window.addEventListener("keydown", onKey);
+    return () => { window.removeEventListener("keydown", onKey); delete root.dataset.peek; };
+  }, [peek, active]);
 
   const saveScene = React.useCallback((s: Saved | null) => {
     setSaved(s);
@@ -294,10 +308,7 @@ export function ScenePicker() {
                   aria-label={p.kind === "preset" ? `${p.label} 숨기기` : `${p.label} 지우기`}
                   disabled={busy}
                   onClick={() => remove(p)}
-                  className="absolute -right-2 -top-2 inline-flex size-6 items-center justify-center rounded-full border border-border-strong bg-surface-raised text-fg-muted shadow-e1 transition-base hover:bg-hover hover:text-fg disabled:opacity-50 [&_svg]:icon-sm"
-                >
-                  <X />
-                </button>
+                />
               </li>
             );
           })}
@@ -335,6 +346,9 @@ export function ScenePicker() {
         />
         <Button size="sm" variant="ghost" disabled={busy || !saved} onClick={reset}>
           <RotateCcw /> 기본 조명
+        </Button>
+        <Button size="sm" variant="ghost" onClick={() => setPeek(true)}>
+          <Eye /> 배경만 보기
         </Button>
         {removed.length > 0 && (
           <Button size="sm" variant="link" disabled={busy} onClick={restorePresets}>
@@ -391,6 +405,14 @@ export function ScenePicker() {
           ))}
         </ul>
       )}
+      {peek && (
+        <div data-slot="peek-bar" className="fixed inset-x-0 bottom-6 z-40 flex justify-center">
+          <Button variant="secondary" onClick={() => setPeek(false)}>
+            <Eye /> 카드 다시 보기 (Esc)
+          </Button>
+        </div>
+      )}
+
       {stats && (
         <p className="text-caption text-fg-subtle">
           평균 밝기 {stats.meanLuma.toFixed(2)} · 조명:바닥 {stats.lightRatio.toFixed(1)}:1 · 지배 색상{" "}
