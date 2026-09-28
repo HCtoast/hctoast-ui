@@ -35,6 +35,8 @@
 | 2 | `bg-surface-raised border border-border shadow-e2` | 드롭다운, 팝오버 |
 | 3 | `bg-surface-raised border border-border shadow-e3` | 모달, 시트 |
 
+레벨 2·3 은 콘텐츠 위에 뜨므로 **어떤 테마에서도 불투명**이어야 한다. 떠 있는 면에 `bg-surface-raised/80` 같은 불투명도 단축이나 `backdrop-blur` 를 얹지 않는다 (헤더 같은 고정 띠는 예외).
+
 ## 새 화면을 만들 때
 
 1. 지면색은 body 가 이미 칠한다 (`bg` + 조명 `--bg-scene`). **페이지 루트 div 에 `bg-bg` 를 다시 칠하지 않는다** — 불투명 지면이 조명을 통째로 가린다. `bg-bg` 는 헤더처럼 부분 영역에만. 콘텐츠 블록은 `bg-surface`로 감싼다.

@@ -202,12 +202,13 @@
 /* night-city — 사이버펑크 2077 나이트시티. 비 젖은 강철 남색 밤 + 시안 네온.
    (구 night-blue 를 대체. 파란 조명 레퍼런스만 따랐고 초록 조명은 취향 밖.)
    라임을 가장 밝게 쓰는 테마 — 파란 밤 위에서 라임이 네온 간판처럼 튄다.
-   표면은 젖은 유리처럼 살짝 비친다(86% / 92%) — 조명 층이 카드 너머로 스며든다. */
+   레벨 1 표면(surface)만 젖은 유리처럼 살짝 비친다(86%) — 조명 층이 카드 너머로 스며든다.
+   레벨 2·3(surface-raised)은 불투명: 떠 있는 면 뒤로 콘텐츠가 비치면 글자가 겹쳐 읽힌다. */
 [data-theme="night-city"] {
   --bg:            var(--color-steel-800);
   --bg-inset:      var(--color-steel-900);
   --surface:       rgb(17 33 50 / 0.86);   /* steel-700 */
-  --surface-raised:rgb(24 47 68 / 0.92);   /* steel-600 */
+  --surface-raised:var(--color-steel-600);  /* 떠 있는 면(드롭다운·팝오버·모달)은 불투명 — 뒤 콘텐츠가 비치면 글자가 겹친다. 젖은 유리는 surface(레벨 1)만 */
   --border:        var(--color-steel-500);
   --border-strong: var(--color-steel-400);
 

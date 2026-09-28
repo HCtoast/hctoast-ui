@@ -11,7 +11,7 @@
 /* ---- 실험(임시): night-city 후보 B(조명 2배) / C(사진 + 유리). 결정 후 삭제 ---- */
 [data-theme="night-city-b"] {
   --bg: #040a14;  --bg-inset: #02060e;
-  --surface: rgb(12 24 38 / 0.84);  --surface-raised: rgb(20 40 60 / 0.92);
+  --surface: rgb(12 24 38 / 0.84);  --surface-raised: #14283c;  /* 떠 있는 면은 불투명 */
   --border: #1c3448;  --border-strong: #2c5068;
   --fg: #e3ecf2;  --fg-muted: #93adc0;  --fg-subtle: #5d7789;
   --fg-on-action: #14180a;  --fg-on-danger: #1c130f;  --fg-on-solid: #1c130f;  --fg-on-accent: #06202a;
@@ -38,7 +38,7 @@
 
 [data-theme="night-city-c"] {
   --bg: #040a14;  --bg-inset: #02060e;
-  --surface: rgb(12 24 38 / 0.84);  --surface-raised: rgb(20 40 60 / 0.92);
+  --surface: rgb(12 24 38 / 0.84);  --surface-raised: #14283c;  /* 떠 있는 면은 불투명 */
   --border: #1c3448;  --border-strong: #2c5068;
   --fg: #e3ecf2;  --fg-muted: #93adc0;  --fg-subtle: #5d7789;
   --fg-on-action: #14180a;  --fg-on-danger: #1c130f;  --fg-on-solid: #1c130f;  --fg-on-accent: #06202a;
