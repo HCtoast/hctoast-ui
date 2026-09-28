@@ -1,0 +1,199 @@
+/* ============================================================
+   실험용 — 테마 후보 비교 (app/compare 전용)
+   registry/theme.css 는 건드리지 않는다. 이 파일은 비교 페이지의 패널 래퍼
+   [data-palette][data-mode] 안에서만 시맨틱 변수를 덮어쓴다.
+
+   current : 지금 배포된 값의 복사본 (day = :root, night = night-blue)
+   prev    : day 적용 전 값 (동작색 lime-700). day 는 후보 B(olive-600)로 결정돼
+             registry/theme.css 에 적용됐다 — 비교 페이지의 day 오른쪽은 :root 그대로.
+   dim     : night 에 적용된 저조도 값의 복사본 (= registry/theme.css night 블록)
+   lavender: night-lavender 후보. 호나미 시티 — 청보라 지면, 등나무 라벤더 accent, 잎 라임
+   city    : night-city 후보. 사이버펑크 2077 — 파란 강철 남색 지면, 시안 네온 accent, 산호 네온 danger
+   (기각: 회녹 올리브 뉴트럴 틴트, 올리브유 채움+어두운 글자(A))
+
+   채택되면 값을 registry/theme.css 로 옮기고 이 파일은 지운다.
+   ============================================================ */
+
+/* 조명(scene) 레이어 — 지면 단색 위에 얹는 그라데이션. 토큰은 --bg-scene 하나.
+   채택 시 theme.css 에서 body { background-image: var(--bg-scene) } 로 건다.
+   day = 오른쪽 위 햇살, night-lavender = 위쪽 등불 온기 + 청보라→보라 하늘,
+   night-city = 위는 어둡고 아래 물웅덩이에 시안 반사. night(저조도)는 조명 없음. */
+[data-palette][data-mode] { background-image: var(--bg-scene, none); }
+
+/* 호버·드래그 실험 — action-soft(라임 틴트)에서 분리
+   --hover     : 빛이 스치는 정도의 뉴트럴 리프트. fg 8% — 어느 테마든 배경과 싸우지 않는다.
+                 대상: 보조/고스트 버튼 호버, 메뉴 하이라이트, 다이얼로그 닫기 호버.
+   --selection : 드래그 하이라이트. 그 테마의 "빛"(accent) 30% — 파란색 고정이 아니라
+                 night-city 는 시안, lavender 는 라벤더, day 는 올리브유, night 는 짙은 올리브.
+   action-soft 는 "동작색 표시"(action 뱃지, 선택된 상태)에만 남긴다.
+   (theme.css 에 채택됨 — 여기선 패널 스코프 안에서 accent 가 바뀌므로 다시 계산만 한다) */
+[data-palette][data-mode] {
+  --hover: color-mix(in oklab, var(--fg) 8%, transparent);
+  --selection: color-mix(in oklab, var(--accent) 30%, transparent);
+}
+
+/* ---------- prev / day (적용 전 :root 복사 — 동작색 lime-700) ---------- */
+[data-palette="prev"][data-mode="day"] {
+  --bg-scene: none;
+  --bg: #f7f4ea;  --bg-inset: #ebe6d6;
+  --surface: #faf7ec;  --surface-raised: #fffdf7;
+  --border: #e3decd;  --border-strong: #cdc6b0;
+  --fg: #1c1b16;  --fg-muted: #6b6759;  --fg-subtle: #918c7c;
+  --fg-on-action: #ffffff;  --fg-on-danger: #ffffff;  --fg-on-solid: #ffffff;  --fg-on-accent: #1c1b16;
+  --action: #5f6e1a;  --action-hover: #4c5814;  --action-soft: #eef4c9;
+  --action-ring: color-mix(in oklab, #5f6e1a 40%, transparent);
+  --accent: #c9d96b;
+  --danger: #b03a2e;  --danger-hover: #93261c;
+  --warning: #8a6410;  --success: #17715c;  --info: #3f5f9e;
+  --overlay: rgb(28 27 22 / 0.45);
+  --shadow-1: 0 1px 2px rgb(28 27 22 / 0.06);
+  --shadow-2: 0 2px 8px rgb(28 27 22 / 0.08);
+  --shadow-3: 0 8px 24px rgb(28 27 22 / 0.10);
+  color-scheme: light;
+}
+
+/* ---------- prev / night-city (= 구 night-blue 복사) ---------- */
+[data-palette="prev"][data-mode="night-city"] {
+  --bg-scene: none;
+  --bg: #020715;  --bg-inset: #01040e;
+  --surface: #0a1024;  --surface-raised: #121a32;
+  --border: #1e2846;  --border-strong: #2b3a63;
+  --fg: #e7eaf2;  --fg-muted: #9aa3ba;  --fg-subtle: #6c7691;
+  --fg-on-action: #14180a;  --fg-on-danger: #1c130f;  --fg-on-solid: #1c130f;  --fg-on-accent: #14180a;
+  --action: #c9d96b;  --action-hover: #d6e388;
+  --action-soft: color-mix(in oklab, #c9d96b 16%, transparent);
+  --action-ring: color-mix(in oklab, #c9d96b 50%, transparent);
+  --accent: #c9d96b;
+  --danger: #f08a7c;  --danger-hover: #f4a99d;
+  --warning: #e8b34a;  --success: #57c9a8;  --info: #8fb0e8;
+  --overlay: rgb(1 4 14 / 0.66);
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.50);
+  --shadow-2: 0 2px 8px rgb(0 0 0 / 0.55);
+  --shadow-3: 0 8px 24px rgb(0 0 0 / 0.65);
+  color-scheme: dark;
+}
+
+/* ---------- prev / night (적용 전 night 복사 — 라임 동작색) ---------- */
+[data-palette="prev"][data-mode="night"] {
+  --bg-scene: none;
+  --bg: #0c0c0d;  --bg-inset: #08080a;
+  --surface: #151517;  --surface-raised: #1d1d20;
+  --border: #2a2a2e;  --border-strong: #3a3a40;
+  --fg: #ececed;  --fg-muted: #a1a1a6;  --fg-subtle: #6e6e75;
+  --fg-on-action: #14180a;  --fg-on-danger: #1c130f;  --fg-on-solid: #1c130f;  --fg-on-accent: #14180a;
+  --action: #c9d96b;  --action-hover: #d6e388;
+  --action-soft: color-mix(in oklab, #c9d96b 16%, transparent);
+  --action-ring: color-mix(in oklab, #c9d96b 50%, transparent);
+  --accent: #c9d96b;
+  --danger: #f08a7c;  --danger-hover: #f4a99d;
+  --warning: #e8b34a;  --success: #57c9a8;  --info: #8fb0e8;
+  --overlay: rgb(0 0 0 / 0.6);
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.40);
+  --shadow-2: 0 2px 8px rgb(0 0 0 / 0.45);
+  --shadow-3: 0 8px 24px rgb(0 0 0 / 0.55);
+  color-scheme: dark;
+}
+
+/* ---------- dim / night ----------
+   "어두움 + 컬러도 어두운 쪽". 저조도 환경용. 뉴트럴 지면은 그대로 두고
+   빛나는 것들을 전부 한두 단계 내린다.
+   fg #ececed → #d9d9db (눈부심 감소, 여전히 13:1)
+   action 라임 #c9d96b → 올리브유 #8a9c2c(lime-600). day 와 같은 색 계열의 어두운 판.
+   accent = lime-700. 상태색도 명도 10% 안팎 내림. 전부 AA 확인. */
+[data-palette="dim"][data-mode="night"] {
+  --bg-scene: none;
+  --bg: #0c0c0d;  --bg-inset: #08080a;
+  --surface: #151517;  --surface-raised: #1d1d20;
+  --border: #2a2a2e;  --border-strong: #3a3a40;
+  --fg: #d9d9db;  --fg-muted: #97979c;  --fg-subtle: #66666c;
+  --fg-on-action: #14180a;  --fg-on-danger: #1c130f;  --fg-on-solid: #1c130f;  --fg-on-accent: #ececed;
+  --action: #8a9c2c;  --action-hover: #9aad38;
+  --action-soft: color-mix(in oklab, #8a9c2c 14%, transparent);
+  --action-ring: color-mix(in oklab, #8a9c2c 50%, transparent);
+  --accent: #5f6e1a;
+  --danger: #d4766b;  --danger-hover: #e08d83;
+  --warning: #cfa040;  --success: #4bb092;  --info: #7f9dd2;
+  --overlay: rgb(0 0 0 / 0.6);
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.40);
+  --shadow-2: 0 2px 8px rgb(0 0 0 / 0.45);
+  --shadow-3: 0 8px 24px rgb(0 0 0 / 0.55);
+  color-scheme: dark;
+}
+
+/* ---------- night-lavender (호나미 시티 — reference/night-lavender) ----------
+   호나미 시티 레퍼런스 5장에서 뽑은 지배색: 하늘·건물 청보라 #193569(h220 s61 l25) 35%,
+   중간 파랑 #3c56a4, 보라 #6858ad, 라벤더 #ab98d8, 등불 주황 #e7ad9b, 연두 덩굴.
+   결론: 호나미의 밤은 "검정에 가까운 남색"이 아니라 채도 있는 청보라다. 지면을
+   순흑에서 한참 떼서 l16~27 청보라 램프로 간다(밝기 대비는 여전히 4.5:1 이상).
+
+   역할 배분
+   밤하늘/도시 = 뉴트럴 램프(청보라). 화면의 85%.
+   벚꽃        = 등나무 라벤더 #b39be0 를 accent 로. 분홍이 아니라 보라다.
+                 글자 램프에도 라벤더 언더톤(fg-muted h240 s40).
+   몸통/가지   = border-strong. 어두운 보라 #5b52a0 — 밤빛 아래 가지는 갈색이 아니라 보라.
+   잎          = action 라임. 덩굴·나무가 노란 연두라 그대로 맞는다.
+   등불/네온   = warning(호박 #f2b544)·danger(산호 네온 #ff8a76). 상태색이 곧 도시 불빛.
+   물·간판 하늘색 = info #93ace4 (레퍼런스 210-light 그대로). */
+[data-palette="lavender"][data-mode="night-lavender"] {
+  /* v3: "night 치고 너무 밝다" → 지면 l16→12. 밝은 분위기는 조명(등불 글로우)이 맡는다 */
+  --bg: #0f1540;  --bg-inset: #0a0e2c;
+  --surface: #151c49;  --surface-raised: #1d2559;
+  --border: #29306e;  --border-strong: #4e4494;
+  --bg-scene:
+    radial-gradient(60% 45% at 80% 0%, rgb(255 190 120 / 0.16), transparent 70%),
+    linear-gradient(180deg, #0c1238 0%, #121648 55%, #241a4e 100%);
+  --fg: #eceaf8;  --fg-muted: #b3b1dd;  --fg-subtle: #7f7fb5;
+  --fg-on-action: #14180a;  --fg-on-danger: #1c130f;  --fg-on-solid: #1c130f;  --fg-on-accent: #1a1533;
+  --action: #c4d36a;  --action-hover: #d3df84;
+  --action-soft: color-mix(in oklab, #c4d36a 14%, transparent);
+  --action-ring: color-mix(in oklab, #c4d36a 50%, transparent);
+  --accent: #b39be0;
+  --danger: #ff8a76;  --danger-hover: #ffa494;
+  --warning: #f2b544;  --success: #57c9a8;  --info: #93ace4;
+  --overlay: rgb(13 21 51 / 0.70);
+  --shadow-1: 0 1px 2px rgb(5 8 25 / 0.45);
+  --shadow-2: 0 2px 8px rgb(5 8 25 / 0.50);
+  --shadow-3: 0 8px 24px rgb(5 8 25 / 0.60);
+  color-scheme: dark;
+}
+
+/* ---------- night-city (사이버펑크 2077 — reference/night-city) ----------
+   레퍼런스 4장 중 파란 조명 두 장(발코니·젖은 유리) 기준. 초록 조명 두 장은 취향 밖.
+   지배색: 강철 남색 #122635(h205) 57%, 검푸른 #0f1824 30%, 시안 빛 #4588a7 · #afcede,
+   수영장 파랑 #2d5fb9, 산호 네온 #dab1a8(아라사카 간판).
+
+   역할 배분
+   밤/건물     = 뉴트럴 램프. 검정이 아니라 젖은 강철 남색(h210, s45~50). night-blue 보다
+                 파랗고, 순흑에서 한 단계 뗐다(l 8~18).
+   네온 간판   = accent 시안 #42a5be (v3, 가라앉힌 값). 홀로그램·수영장 빛. 텍스트 금지, 채움·장식 전용.
+   잎/라임 간판 = action 라임-400 그대로 — 파란 밤에서 라임이 네온 간판처럼 튄다.
+                 night-city 가 라임을 가장 밝게 쓰는 테마.
+   아라사카 빨강 = danger 산호 #d9736a (v3, 가라앉힌 값). 경고등이 곧 위험색.
+   info        = 수영장 파랑 #7396d9 (v3). accent 시안과 색상 20° 차이 — 둘 다 텍스트로 쓰면 헷갈리니
+                 accent 는 채움 전용이라는 규칙이 여기서 실제로 중요하다.
+   비          = 3번 레퍼런스(젖은 유리 너머 벚꽃). 나중에 rain 수정자 만들 때 여기서 출발. */
+[data-palette="city"][data-mode="night-city"] {
+  /* v2: 축축함 — 위는 어둡고 아래 물웅덩이에 시안 네온이 비친다. 표면은 젖은 유리처럼 살짝 비침 */
+  --bg: #0b1420;  --bg-inset: #070d16;
+  --surface: rgb(17 33 50 / 0.86);  --surface-raised: rgb(24 47 68 / 0.92);
+  --bg-scene:
+    radial-gradient(70% 40% at 50% 100%, rgb(66 165 190 / 0.14), transparent 70%),
+    radial-gradient(40% 30% at 15% 85%, rgb(217 115 106 / 0.06), transparent 70%),
+    linear-gradient(180deg, #070d16 0%, #0b1420 50%, #0e1b2c 100%);
+  --border: #223d54;  --border-strong: #2f5673;
+  --fg: #e3ecf2;  --fg-muted: #93adc0;  --fg-subtle: #5d7789;
+  --fg-on-action: #14180a;  --fg-on-danger: #1c130f;  --fg-on-solid: #1c130f;  --fg-on-accent: #06202a;
+  --action: #c9d96b;  --action-hover: #d6e388;
+  --action-soft: color-mix(in oklab, #c9d96b 14%, transparent);
+  --action-ring: color-mix(in oklab, #c9d96b 50%, transparent);
+  --accent: #42a5be;   /* v3: #5fd4f0 는 낮처럼 쨍해서 한 단계 가라앉힘 (h193 s49 l50) */
+  /* v3: 상태색도 시안과 같은 기준으로 가라앉힘 — 색상은 유지, 채도 ~55%·명도 ~55%.
+     원래 #ff7a6b / #f0b64c / #57c9a8 / #7fa8ff. 전부 텍스트 4.5:1, 솔리드 위 어두운 글자 4.5:1 이상 */
+  --danger: #e07f76;  --danger-hover: #ea968e;
+  --warning: #d4a24f;  --success: #4fae95;  --info: #7396d9;
+  --overlay: rgb(4 9 16 / 0.70);
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.50);
+  --shadow-2: 0 2px 8px rgb(0 0 0 / 0.55);
+  --shadow-3: 0 8px 24px rgb(0 0 0 / 0.65);
+  color-scheme: dark;
+}
