@@ -54,6 +54,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+import { ScenePicker } from "./scene-picker";
 import { ThemeControl } from "./theme-control";
 
 const REGISTRY = "https://hctoast-ui.vercel.app";
@@ -198,6 +199,8 @@ export default function Home() {
             자동으로 함께 가져오므로 따로 받을 필요가 없습니다.
           </p>
         </section>
+
+        <ScenePicker />
 
         <DocSection
           id="tokens"

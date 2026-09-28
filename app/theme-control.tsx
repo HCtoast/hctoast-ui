@@ -31,13 +31,13 @@ function applyTheme(next: Theme) {
   }
 }
 
+/** DOM 의 data-theme 을 외부 스토어로 읽는다. layout 의 인라인 스크립트가 먼저 세팅한다. */
+export function useTheme(): Theme {
+  return React.useSyncExternalStore(subscribe, currentTheme, () => "day" as Theme);
+}
+
 export function ThemeControl() {
-  // DOM 의 data-theme 을 외부 스토어로 읽는다. layout 의 인라인 스크립트가 먼저 세팅한다.
-  const theme = React.useSyncExternalStore(
-    subscribe,
-    currentTheme,
-    () => "day" as Theme,
-  );
+  const theme = useTheme();
 
   return (
     <div className="flex gap-2" role="group" aria-label="테마 선택">
