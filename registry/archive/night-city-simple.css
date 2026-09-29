@@ -1,0 +1,60 @@
+/* ============================================================
+   아카이브 — night-city "심플" 판 (그라데이션 조명, 사진 없음)
+   2026-09-29 까지의 night-city. 사진 + 유리 판이 정식이 되면서 여기로 옮겼다.
+   레지스트리에 포함되지 않는다. 다시 쓰려면 이 블록을 registry/theme.css 의
+   [data-theme="night-city"] 자리에 그대로 붙여 넣는다 (steel 스케일은 사진 판 기준으로
+   바뀌었으므로 아래는 원시 값을 직접 적었다).
+   특징: 지면 #0b1420, 위는 어둡고 아래 물웅덩이에 시안 14% 반사 + 왼쪽 아래 산호 6%.
+   조명이 단순해서 담백하다 — 사진 없이 가볍게 가고 싶을 때. 전부 AA 검증됨.
+   ============================================================ */
+
+/* night-city — 사이버펑크 2077 나이트시티. 비 젖은 강철 남색 밤 + 시안 네온.
+   (구 night-blue 를 대체. 파란 조명 레퍼런스만 따랐고 초록 조명은 취향 밖.)
+   라임을 가장 밝게 쓰는 테마 — 파란 밤 위에서 라임이 네온 간판처럼 튄다.
+   레벨 1 표면(surface)만 젖은 유리처럼 살짝 비친다(86%) — 조명 층이 카드 너머로 스며든다.
+   레벨 2·3(surface-raised)은 불투명: 떠 있는 면 뒤로 콘텐츠가 비치면 글자가 겹쳐 읽힌다. */
+[data-theme="night-city"] {
+  --bg:            #0b1420;
+  --bg-inset:      #070d16;
+  --surface:       rgb(17 33 50 / 0.86);   /* steel-700 */
+  --surface-raised:#182f44;  /* 떠 있는 면(드롭다운·팝오버·모달)은 불투명 — 뒤 콘텐츠가 비치면 글자가 겹친다. 젖은 유리는 surface(레벨 1)만 */
+  --border:        #223d54;
+  --border-strong: #2f5673;
+
+  --fg:            var(--color-steel-50);
+  --fg-muted:      var(--color-steel-200);
+  --fg-subtle:     var(--color-steel-300);
+  --fg-on-action:  var(--color-lime-950);
+  --fg-on-danger:  #1c130f;
+  --fg-on-solid:   #1c130f;
+  --fg-on-accent:  #06202a;
+
+  --action:        var(--color-lime-400);
+  --action-hover:  var(--color-lime-300);
+  --action-soft:   color-mix(in oklab, var(--color-lime-400) 14%, transparent);
+  --action-ring:   color-mix(in oklab, var(--color-lime-400) 50%, transparent);
+
+  --accent:        var(--color-cyan-500);
+
+  --danger:       var(--color-danger-city);
+  --danger-hover: #ea968e;
+  --warning: var(--color-warning-city);
+  --success: var(--color-success-city);
+  --info:    var(--color-info-city);
+
+  --overlay: rgb(4 9 16 / 0.70);
+
+  /* 위는 어둡고, 아래 물웅덩이에 시안 네온이 비친다. 왼쪽 아래 산호 네온은 아주 희미하게 */
+  --bg-scene:
+    radial-gradient(70% 40% at 50% 100%, rgb(66 165 190 / 0.14), transparent 70%),
+    radial-gradient(40% 30% at 15% 85%, rgb(224 127 118 / 0.06), transparent 70%),
+    linear-gradient(180deg, #070d16 0%, #0b1420 50%, #0e1b2c 100%);
+  --hover:     color-mix(in oklab, var(--fg) 8%, transparent);
+  --selection: color-mix(in oklab, var(--accent) 30%, transparent);
+
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.50);
+  --shadow-2: 0 2px 8px rgb(0 0 0 / 0.55);
+  --shadow-3: 0 8px 24px rgb(0 0 0 / 0.65);
+
+  color-scheme: dark;
+}

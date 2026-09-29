@@ -21,7 +21,7 @@ import {
 
 import { useTheme } from "./theme-control";
 
-/* night-city-c 전용 "조명 사진" 선택기 (실험).
+/* night-city 전용 "조명 사진" 선택기 (쇼케이스).
    목록 = 프리셋(지운 것 제외) + 내 사진(업로드). 사진을 고르면 scene-from-photo 가 조명으로 구워
    --bg-scene 에 넣는다. 사용자가 만지는 건 둘: 조명 양(면적 %)과 창밖 밝기.
    업로드 사진은 800px 로 줄여 localStorage 에 두므로 새로고침 뒤에도 남고 다시 구울 수 있다.
@@ -96,7 +96,7 @@ async function shrinkForStorage(file: File): Promise<string> {
 
 export function ScenePicker() {
   const theme = useTheme();
-  const active = theme === "night-city-c";
+  const active = theme === "night-city";
   // 서버에선 active=false 라 null 을 그리고, 클라이언트 첫 렌더도 서버 스냅샷("day")을 쓰므로
   // 하이드레이션 불일치가 없다.
   const [saved, setSaved] = React.useState<Saved | null>(() => readJson<Saved | null>(KEY_SCENE, null));
@@ -266,7 +266,7 @@ export function ScenePicker() {
       className="flex flex-col gap-4 rounded-lg border border-border bg-surface p-6 shadow-e1 transition-base data-[dragover]:border-accent data-[dragover]:bg-accent/15"
     >
       <div className="flex flex-col gap-2">
-        <h2 className="text-h3 text-fg">조명 사진 (night-city-c 실험)</h2>
+        <h2 className="text-h3 text-fg">조명 사진 (night-city)</h2>
         <p className="text-body-sm text-fg-muted">
           사진에서 가장 밝은 부분만 조명으로 남기고 빛번짐을 구워 유리 아래에 깐다. 어떤 사진이든
           &ldquo;그 사진의 밤&rdquo;이 된다. 조명 양과 창밖 밝기만 조절할 수 있고, 밝기는 글자가 읽히는

@@ -8,7 +8,7 @@
              registry/theme.css 에 적용됐다 — 비교 페이지의 day 오른쪽은 :root 그대로.
    dim     : night 에 적용된 저조도 값의 복사본 (= registry/theme.css night 블록)
    lavender: night-lavender 후보. 호나미 시티 — 청보라 지면, 등나무 라벤더 accent, 잎 라임
-   city    : night-city 후보. 사이버펑크 2077 — 파란 강철 남색 지면, 시안 네온 accent, 산호 네온 danger
+   simple  : night-city 심플 판(아카이브). 사이버펑크 2077 — 파란 강철 남색 지면, 시안 네온 accent, 산호 네온 danger
    (기각: 회녹 올리브 뉴트럴 틴트, 올리브유 채움+어두운 글자(A))
 
    채택되면 값을 registry/theme.css 로 옮기고 이 파일은 지운다.
@@ -172,7 +172,7 @@
    info        = 수영장 파랑 #7396d9 (v3). accent 시안과 색상 20° 차이 — 둘 다 텍스트로 쓰면 헷갈리니
                  accent 는 채움 전용이라는 규칙이 여기서 실제로 중요하다.
    비          = 3번 레퍼런스(젖은 유리 너머 벚꽃). 나중에 rain 수정자 만들 때 여기서 출발. */
-[data-palette="city"][data-mode="night-city"] {
+[data-palette="simple"][data-mode="night-city"] {
   /* v2: 축축함 — 위는 어둡고 아래 물웅덩이에 시안 네온이 비친다. 표면은 젖은 유리처럼 살짝 비침 */
   --bg: #0b1420;  --bg-inset: #070d16;
   --surface: rgb(17 33 50 / 0.86);  --surface-raised: rgb(24 47 68 / 0.92);

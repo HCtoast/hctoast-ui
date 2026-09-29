@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 };
 
 // 하이드레이션 전에 저장된 테마를 적용해 FOUC / 미스매치를 막는다.
-const themeInit = `(function(){try{var t=localStorage.getItem("hctoast-theme");if(t==="day"||t==="night"||t==="night-city"||t==="night-city-b"||t==="night-city-c"||t==="night-lavender"){document.documentElement.dataset.theme=t;}}catch(e){}})();`;
+const themeInit = `(function(){try{var t=localStorage.getItem("hctoast-theme");if(t==="day"||t==="night"||t==="night-city"||t==="night-lavender"){document.documentElement.dataset.theme=t;}}catch(e){}})();`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

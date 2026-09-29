@@ -56,12 +56,12 @@
   --color-steel-50:  #e3ecf2;
   --color-steel-200: #93adc0;
   --color-steel-300: #5d7789;
-  --color-steel-400: #2f5673;
-  --color-steel-500: #223d54;
-  --color-steel-600: #182f44;
-  --color-steel-700: #112132;
-  --color-steel-800: #0b1420;
-  --color-steel-900: #070d16;
+  --color-steel-400: #2c5068;
+  --color-steel-500: #1c3448;
+  --color-steel-600: #14283c;
+  --color-steel-700: #0c1826;
+  --color-steel-800: #040a14;  /* 사진 + 유리 판 기준으로 한 단계 더 어둡게 (심플 판은 #0b1420) */
+  --color-steel-900: #02060e;
   --color-cyan-500:  #42a5be;  /* ★ night-city 장식(accent). 네온·홀로그램. 쨍하지 않게 가라앉힌 값 */
 
   /* 청보라 (night-lavender 지면 — 명조 호나미 시티. 레퍼런스: reference/night-lavender/) */
@@ -202,13 +202,17 @@
 /* night-city — 사이버펑크 2077 나이트시티. 비 젖은 강철 남색 밤 + 시안 네온.
    (구 night-blue 를 대체. 파란 조명 레퍼런스만 따랐고 초록 조명은 취향 밖.)
    라임을 가장 밝게 쓰는 테마 — 파란 밤 위에서 라임이 네온 간판처럼 튄다.
-   레벨 1 표면(surface)만 젖은 유리처럼 살짝 비친다(86%) — 조명 층이 카드 너머로 스며든다.
-   레벨 2·3(surface-raised)은 불투명: 떠 있는 면 뒤로 콘텐츠가 비치면 글자가 겹쳐 읽힌다. */
+   조명은 "사진 + 유리": 도시 야경 사진을 96px 로 줄여 블러·조명 강조를 구운 1.6KB WebP
+   (data URI)를 맨 아래 깔고 위 86% → 아래 72% 어두운 유리로 덮는다. 조명은 사진에서 나온다.
+   쇼케이스의 조명 사진 선택기(scene-from-photo)로 사진을 바꾸면 --bg-scene 이 인라인으로 덮인다.
+   레벨 1 표면(surface)만 젖은 유리처럼 살짝 비친다(84%) — 조명 층이 카드 너머로 스며든다.
+   레벨 2·3(surface-raised)은 불투명: 떠 있는 면 뒤로 콘텐츠가 비치면 글자가 겹쳐 읽힌다.
+   심플한 그라데이션 조명 판은 registry/archive/night-city-simple.css 에 있다. */
 [data-theme="night-city"] {
   --bg:            var(--color-steel-800);
   --bg-inset:      var(--color-steel-900);
-  --surface:       rgb(17 33 50 / 0.86);   /* steel-700 */
-  --surface-raised:var(--color-steel-600);  /* 떠 있는 면(드롭다운·팝오버·모달)은 불투명 — 뒤 콘텐츠가 비치면 글자가 겹친다. 젖은 유리는 surface(레벨 1)만 */
+  --surface:       rgb(12 24 38 / 0.84);   /* steel-700 */
+  --surface-raised:var(--color-steel-600);  /* 떠 있는 면(드롭다운·팝오버·모달)은 불투명 */
   --border:        var(--color-steel-500);
   --border-strong: var(--color-steel-400);
 
@@ -233,19 +237,18 @@
   --success: var(--color-success-city);
   --info:    var(--color-info-city);
 
-  --overlay: rgb(4 9 16 / 0.70);
+  --overlay: rgb(2 6 14 / 0.72);
 
-  /* 위는 어둡고, 아래 물웅덩이에 시안 네온이 비친다. 왼쪽 아래 산호 네온은 아주 희미하게 */
+  /* 사진 + 유리. 사진 출처는 임시(레퍼런스 스크린샷) — 직접 찍은 사진/CC0 로 교체 예정 */
   --bg-scene:
-    radial-gradient(70% 40% at 50% 100%, rgb(66 165 190 / 0.14), transparent 70%),
-    radial-gradient(40% 30% at 15% 85%, rgb(224 127 118 / 0.06), transparent 70%),
-    linear-gradient(180deg, #070d16 0%, #0b1420 50%, #0e1b2c 100%);
+    linear-gradient(180deg, rgb(4 10 20 / 0.86) 0%, rgb(4 10 20 / 0.72) 100%),
+    url("data:image/webp;base64,UklGRr4EAABXRUJQVlA4WAoAAAAwAAAAXwAANQAASUNDUMgBAAAAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADZBTFBIcQAAAA0hAklbvO2P6H/scNy2kSTJ3cC8NsANd4Lao7F1OIH6b8QETMDzLRwhNYzcUjjC7eWnYO7t8hAgAhnKYIbDIJjbIMEMMpZBJAGGuQVohtkFf9832GiCZDAbSwQSSsNgWLajlQYbSrBsSyitGKaWbdkAAFZQOCBWAgAAcBEAnQEqYAA2AD5pKpJFpCKhmfkWqEAGhLEAWX9xxm5Q1p7tcY+GmRiU2yC5wrHkzsN6OQZHK5cbJ8jmVZXwwFRswHQG9uePYNqnIS3R+qCWjL0SNHdnrH9THguApz9bZdP1/CpPq2z+5LDZowzpdCnsHuqgB8/7Fhv6slC0eUlfksQKpw1T0zhEhKvKxPc9Dgk3RAD+/wjXcEp6Q6Jkr3z+9pJuuBjoD1MucrIgWmp1UnV345N9JhWoMFvYbDlvMGGHv1AaA+irvLv9dJUOUX+Ty2wyHaChhzilmnr8hbP+boBZt847wvhQfuIQPi7r+v02IsrCZmndtb8ubspiE1RI814vGc2deYqMB+2XygpN70TnaKfwi194LDOZVWhyHyefXAVPtOoaDkUlRNPvi83pHuD6c8IBvICoM6Ak2B6Fygoa1mOCsve7akTCNVQvD2TFQ9XxVB8Ef2BKb7MP+8dksXZ6vxi5PtctWHnpcwMBB4wvpZfmmoD2i4aMk8uswGJRnJFghF8iUOXbbZujV13td6DzLnuAg/Ftl07nd8zTHazzy4CIf2ORrh9nM1v5qREBelgrnyP3VPay7WaOu9HwMDea8KxK3510cy4+i2k+GqaOd1wemwRbXxbLs6VBI2UMzsNWaYjOnQ96AjMbRg9MCVuh3XXHsuzx5fDGCD7Kk2mWS4aT8yOC/QHBJXB1nR9lKpdgbEE5Nte8IQWbT4u84Q35BzRzIoKbAGHx60vuHfqt9XrjXvzozlGmfNgG0FK83sHbtlMz2wxkqnfosPUaUwSAAA==");
   --hover:     color-mix(in oklab, var(--fg) 8%, transparent);
   --selection: color-mix(in oklab, var(--accent) 30%, transparent);
 
-  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.50);
-  --shadow-2: 0 2px 8px rgb(0 0 0 / 0.55);
-  --shadow-3: 0 8px 24px rgb(0 0 0 / 0.65);
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.55);
+  --shadow-2: 0 2px 8px rgb(0 0 0 / 0.60);
+  --shadow-3: 0 8px 24px rgb(0 0 0 / 0.70);
 
   color-scheme: dark;
 }
@@ -470,6 +473,8 @@
     /* 조명 층. 단색 지면 위에 그라데이션을 덧칠한다. 스크롤해도 조명은 고정 */
     background-image: var(--bg-scene);
     background-attachment: fixed;
+    background-size: cover;          /* 사진 층(night-city)을 화면에 꽉 채운다. 그라데이션엔 영향 없음 */
+    background-position: center;
     color: var(--fg);
     font-family: var(--font-sans);
     /* text-body 와 동일한 값. 타이포 유틸은 @utility 로 정의돼 있어

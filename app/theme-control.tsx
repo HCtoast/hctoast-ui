@@ -4,13 +4,13 @@ import * as React from "react";
 
 import { Button } from "@/components/ui/button";
 
-const THEMES = ["day", "night", "night-city", "night-city-b", "night-city-c", "night-lavender"] as const; // night-city-b/c 는 임시 후보
+const THEMES = ["day", "night", "night-city", "night-lavender"] as const;
 type Theme = (typeof THEMES)[number];
 const STORAGE_KEY = "hctoast-theme";
 
 function currentTheme(): Theme {
   const t = document.documentElement.dataset.theme;
-  return t === "night" || t === "night-city" || t === "night-city-b" || t === "night-city-c" || t === "night-lavender" ? t : "day";
+  return t === "night" || t === "night-city" || t === "night-lavender" ? t : "day";
 }
 
 function subscribe(onChange: () => void) {

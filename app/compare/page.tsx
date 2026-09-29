@@ -24,7 +24,7 @@ import "./candidate.css";
    Radix 포털 컴포넌트(Dialog·Popover 등)는 body 에 붙어 패널 스코프를 벗어나므로 뺐다. */
 
 /* "current" 는 candidate.css 에 정의가 없어 :root(= registry/theme.css)가 그대로 보인다. */
-type Palette = "current" | "prev" | "dim" | "lavender" | "city";
+type Palette = "current" | "prev" | "dim" | "lavender" | "simple";
 type Mode = "day" | "night" | "night-city" | "night-lavender";
 
 type PaletteInfo = { id: Palette; label: string; note: string };
@@ -49,9 +49,9 @@ const PALETTES: Record<Mode, PaletteInfo[]> = {
   "night-city": [
     { id: "prev", label: "이전 · night-blue", note: "순흑 남색 + 라임 #c9d96b" },
     {
-      id: "city",
-      label: "적용됨 · night-city (사이버펑크 2077)",
-      note: "비 젖은 강철 남색 · 아래 물웅덩이 시안 반사 · 카드 86% 불투명 · accent 시안 · 상태색 가라앉힘",
+      id: "simple",
+      label: "아카이브 · night-city 심플 (그라데이션 조명)",
+      note: "정식 night-city 는 사진 + 유리(쇼케이스에서 확인). 이 판은 registry/archive/night-city-simple.css",
     },
   ],
   "night-lavender": [
