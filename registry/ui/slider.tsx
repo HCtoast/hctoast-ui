@@ -33,9 +33,37 @@ const thumbVariants = cva("block transition-base", {
   defaultVariants: { thumb: "dot" },
 });
 
-/* 트랙 좌우 안쪽 여백 = 손잡이 반 폭. Radix 는 손잡이를 트랙 안에 가두려고 양 끝에서 반 폭만큼
-   밀기 때문에, 트랙을 같은 만큼 들여야 채워진 구간의 끝과 손잡이 중심이 정확히 겹친다.
+/* 정렬 기하. Radix 는 손잡이를 루트 안에 가두려고 양 끝에서 반 폭만큼 민다. 그래서
+   (1) 트랙을 반 폭만큼 들여야 채움 끝과 손잡이 중심이 겹치고,
+   (2) 루트를 같은 만큼 음수 마진으로 내밀어야 트랙이 옆 글자 열과 같은 폭이 된다.
+   결과: 트랙 = 글자 열, 손잡이만 양 끝에서 반 폭 튀어나온다 (네이티브 슬라이더와 같다).
    (8의 배수 규칙 예외 — 요소 사이 간격이 아니라 손잡이 기하에 종속된 값) */
+const rootVariants = cva(
+  // width 는 auto 로 둔다 — 블록 박스는 음수 마진만큼 저절로 넓어진다 (임의값 calc 불필요)
+  "relative flex touch-none select-none items-center data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+  {
+    variants: {
+      thumb: {
+        dot: "-mx-2.5",
+        pill: "-mx-1.5",
+        ring: "-mx-2.5",
+        bar: "-mx-0.5",
+        knob: "-mx-2",
+      },
+    },
+    defaultVariants: { thumb: "dot" },
+  },
+);
+/* inline 배치에서 슬라이더 칸의 안쪽 여백 = 손잡이 반 폭. 루트의 음수 마진을 상쇄해 손잡이가
+   칸 밖으로 못 나가게 한다 → 양 끝에서도 옆 라벨·값과의 gap-4 가 온전히 남는다. */
+const inlineCellPad: Record<NonNullable<VariantProps<typeof thumbVariants>["thumb"]>, string> = {
+  dot: "px-2.5",
+  pill: "px-1.5",
+  ring: "px-2.5",
+  bar: "px-0.5",
+  knob: "px-2",
+};
+
 const trackVariants = cva(
   "relative h-2 grow overflow-hidden rounded-full bg-bg-inset data-[orientation=vertical]:h-full data-[orientation=vertical]:w-2",
   {
@@ -130,9 +158,7 @@ function Slider({
         onValueCommit?.(next);
       }}
       className={cn(
-        "relative flex w-full touch-none select-none items-center",
-        "data-[orientation=vertical]:h-full data-[orientation=vertical]:w-auto data-[orientation=vertical]:flex-col",
-        "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        rootVariants({ thumb }),
         // 스냅 애니메이션: 드래그가 아닐 때만 손잡이 위치(left)를 잠깐 트랜지션
         "[&:not([data-dragging])_span:has(>[data-slot=slider-thumb])]:transition-snap",
         className,
@@ -173,5 +199,84 @@ function Slider({
   );
 }
 
-export { Slider, thumbVariants, trackVariants };
-export type { SliderProps };
+/* 라벨·값·슬라이더를 한 덩어리로. 사용처가 줄을 손으로 짜면 트랙과 글자 열이 어긋날 수 있어서,
+   슬라이더는 이걸로 쓴다.
+   - stack(기본): 라벨 줄(라벨 왼쪽, 값 오른쪽) 위, 트랙 아래. 트랙 = 라벨 줄과 같은 열.
+   - inline: 라벨 · 트랙 · 값이 한 줄. 라벨은 내용 폭, 트랙이 남는 폭을 다 쓴다.
+   라벨도 값도 없으면 윗줄 자체를 그리지 않는다 — 빈 줄·빈 간격이 남지 않는다.
+   값 표시는 format 으로, 보조 문구(최대값 등)는 hint 로, 끄려면 showValueText={false}. */
+type SliderFieldProps = SliderProps & {
+  label?: React.ReactNode;
+  /** 값 → 표시 문자열. 기본 그대로 */
+  format?: (value: number) => string;
+  /** 값 옆 보조 문구. 예: "최대 40%" */
+  hint?: React.ReactNode;
+  /** 값 텍스트 표시 여부. 기본 true */
+  showValueText?: boolean;
+  /** 라벨 아래 설명 */
+  description?: React.ReactNode;
+  /** stack(기본) | inline(라벨 왼쪽, 값 오른쪽, 한 줄) */
+  layout?: "stack" | "inline";
+  id?: string;
+};
+
+function SliderField({
+  label,
+  format,
+  hint,
+  showValueText = true,
+  description,
+  layout = "stack",
+  id,
+  className,
+  value,
+  defaultValue,
+  ...props
+}: SliderFieldProps) {
+  const autoId = React.useId();
+  const fieldId = id ?? autoId;
+  const shown = (value ?? defaultValue ?? [props.min ?? 0])[0];
+  const valueText = showValueText ? (
+    <span className="shrink-0 text-caption text-fg-muted">
+      {format ? format(shown) : shown}
+      {hint && <> · {hint}</>}
+    </span>
+  ) : null;
+  const labelEl = label ? (
+    <label htmlFor={fieldId} className="shrink-0 text-label text-fg">
+      {label}
+    </label>
+  ) : null;
+  const slider = <Slider id={fieldId} value={value} defaultValue={defaultValue} {...props} />;
+
+  if (layout === "inline") {
+    return (
+      <div className={cn("flex flex-col gap-2", className)}>
+        <div className="flex items-center gap-4">
+          {labelEl}
+          {/* min-w-0 — flex 자식이 트랙 최소 폭 때문에 줄을 밀어내지 않게.
+              안쪽 여백은 손잡이 반 폭 — 손잡이가 라벨·값 쪽으로 침범하지 않는다 */}
+          <div className={cn("min-w-0 flex-1", inlineCellPad[props.thumb ?? "dot"])}>{slider}</div>
+          {valueText}
+        </div>
+        {description && <p className="text-body-sm text-fg-muted">{description}</p>}
+      </div>
+    );
+  }
+
+  return (
+    <div className={cn("flex flex-col gap-2", className)}>
+      {(labelEl || valueText) && (
+        <div className={cn("flex items-center gap-4", labelEl ? "justify-between" : "justify-end")}>
+          {labelEl}
+          {valueText}
+        </div>
+      )}
+      {slider}
+      {description && <p className="text-body-sm text-fg-muted">{description}</p>}
+    </div>
+  );
+}
+
+export { Slider, SliderField, thumbVariants, trackVariants };
+export type { SliderProps, SliderFieldProps };

@@ -6,8 +6,7 @@ import { Eye, ImagePlus, RotateCcw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Dismiss } from "@/components/ui/dismiss";
-import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
+import { SliderField } from "@/components/ui/slider";
 import {
   bakeScene,
   composeScene,
@@ -360,40 +359,29 @@ export function ScenePicker() {
 
       {saved && (
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="scene-coverage">조명 양</Label>
-              <span className="text-caption text-fg-muted">{Math.round(coverage * 100)}%</span>
-            </div>
-            <Slider
-              id="scene-coverage"
-              min={COVERAGE_RANGE[0] * 100}
-              max={COVERAGE_RANGE[1] * 100}
-              snap={1}
-              value={[Math.round(coverage * 100)]}
-              onValueChange={([v]) => changeCoverage(v / 100)}
-              disabled={busy}
-              aria-label="조명 양"
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="scene-glass">창밖 밝기</Label>
-              <span className="text-caption text-fg-muted">
-                {Math.round((1 - (stats?.glass ?? floor)) * 100)}% · 최대 {Math.round((1 - floor) * 100)}%
-              </span>
-            </div>
-            {/* 유리 불투명도의 반대. 오른쪽 끝 = 그 사진에서 글자가 읽히는 최대 밝기 */}
-            <Slider
-              id="scene-glass"
-              min={Math.round((1 - GLASS_MAX) * 100)}
-              max={Math.round((1 - floor) * 100)}
-              snap={1}
-              value={[Math.round((1 - (stats?.glass ?? floor)) * 100)]}
-              onValueChange={([v]) => changeGlass(1 - v / 100)}
-              aria-label="창밖 밝기"
-            />
-          </div>
+          <SliderField
+            label="조명 양"
+            format={(v) => `${v}%`}
+            min={COVERAGE_RANGE[0] * 100}
+            max={COVERAGE_RANGE[1] * 100}
+            snap={1}
+            value={[Math.round(coverage * 100)]}
+            onValueChange={([v]) => changeCoverage(v / 100)}
+            disabled={busy}
+            aria-label="조명 양"
+          />
+          {/* 유리 불투명도의 반대. 오른쪽 끝 = 그 사진에서 글자가 읽히는 최대 밝기 */}
+          <SliderField
+            label="창밖 밝기"
+            format={(v) => `${v}%`}
+            hint={`최대 ${Math.round((1 - floor) * 100)}%`}
+            min={Math.round((1 - GLASS_MAX) * 100)}
+            max={Math.round((1 - floor) * 100)}
+            snap={1}
+            value={[Math.round((1 - (stats?.glass ?? floor)) * 100)]}
+            onValueChange={([v]) => changeGlass(1 - v / 100)}
+            aria-label="창밖 밝기"
+          />
         </div>
       )}
 
