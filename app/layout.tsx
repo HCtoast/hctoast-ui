@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 };
 
 // 하이드레이션 전에 저장된 테마를 적용해 FOUC / 미스매치를 막는다.
-const themeInit = `(function(){try{var t=localStorage.getItem("hctoast-theme");if(t==="day"||t==="night"||t==="night-city"||t==="night-lavender"){document.documentElement.dataset.theme=t;}}catch(e){}})();`;
+const themeInit = `(function(){try{var t=localStorage.getItem("hctoast-theme");if(t==="day"||t==="night"||t==="night-city"||t==="night-lavender"){document.documentElement.dataset.theme=t;}var w=localStorage.getItem("hctoast-weather");if(w==="rain"){document.documentElement.dataset.weather="rain";}var ri=Number(localStorage.getItem("hctoast-rain-intensity"));if(ri>0&&ri<=1){document.documentElement.style.setProperty("--rain-intensity",String(ri));}if(localStorage.getItem("hctoast-rain-fx")==="glass"){document.documentElement.dataset.rainFx="glass";}}catch(e){}})();`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

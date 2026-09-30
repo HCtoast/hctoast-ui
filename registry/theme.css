@@ -145,6 +145,12 @@
   --hover:     color-mix(in oklab, var(--fg) 8%, transparent);
   /* 드래그 하이라이트 = 그 테마의 빛(accent) 30% */
   --selection: color-mix(in oklab, var(--accent) 30%, transparent);
+  /* 빗줄기 색 3층 (data-weather="rain"). 밝은 지면엔 차가운 청회색으로 얇게 */
+  --rain-far:  rgb(70 85 110 / 0.05);
+  --rain-mid:  rgb(70 85 110 / 0.08);
+  --rain-near: rgb(70 85 110 / 0.12);
+  /* 비 강도 0~1. 층별 불투명도·속도가 여기서 파생된다. 0.3 아래면 먼 비만 남는 이슬비 */
+  --rain-intensity: 0.6;
 
   --shadow-1: 0 1px 2px rgb(28 27 22 / 0.06);
   --shadow-2: 0 2px 8px rgb(28 27 22 / 0.08);
@@ -191,6 +197,10 @@
   --bg-scene:  none;   /* 저조도의 정체성은 "빛이 없음" */
   --hover:     color-mix(in oklab, var(--fg) 8%, transparent);
   --selection: color-mix(in oklab, var(--accent) 30%, transparent);
+  /* 빗줄기 색 3층 (data-weather="rain"). 저조도라 비도 희미하게 */
+  --rain-far:  rgb(255 255 255 / 0.03);
+  --rain-mid:  rgb(255 255 255 / 0.05);
+  --rain-near: rgb(255 255 255 / 0.09);
 
   --shadow-1: 0 1px 2px rgb(0 0 0 / 0.40);
   --shadow-2: 0 2px 8px rgb(0 0 0 / 0.45);
@@ -245,6 +255,10 @@
     url("data:image/webp;base64,UklGRr4EAABXRUJQVlA4WAoAAAAwAAAAXwAANQAASUNDUMgBAAAAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADZBTFBIcQAAAA0hAklbvO2P6H/scNy2kSTJ3cC8NsANd4Lao7F1OIH6b8QETMDzLRwhNYzcUjjC7eWnYO7t8hAgAhnKYIbDIJjbIMEMMpZBJAGGuQVohtkFf9832GiCZDAbSwQSSsNgWLajlQYbSrBsSyitGKaWbdkAAFZQOCBWAgAAcBEAnQEqYAA2AD5pKpJFpCKhmfkWqEAGhLEAWX9xxm5Q1p7tcY+GmRiU2yC5wrHkzsN6OQZHK5cbJ8jmVZXwwFRswHQG9uePYNqnIS3R+qCWjL0SNHdnrH9THguApz9bZdP1/CpPq2z+5LDZowzpdCnsHuqgB8/7Fhv6slC0eUlfksQKpw1T0zhEhKvKxPc9Dgk3RAD+/wjXcEp6Q6Jkr3z+9pJuuBjoD1MucrIgWmp1UnV345N9JhWoMFvYbDlvMGGHv1AaA+irvLv9dJUOUX+Ty2wyHaChhzilmnr8hbP+boBZt847wvhQfuIQPi7r+v02IsrCZmndtb8ubspiE1RI814vGc2deYqMB+2XygpN70TnaKfwi194LDOZVWhyHyefXAVPtOoaDkUlRNPvi83pHuD6c8IBvICoM6Ak2B6Fygoa1mOCsve7akTCNVQvD2TFQ9XxVB8Ef2BKb7MP+8dksXZ6vxi5PtctWHnpcwMBB4wvpZfmmoD2i4aMk8uswGJRnJFghF8iUOXbbZujV13td6DzLnuAg/Ftl07nd8zTHazzy4CIf2ORrh9nM1v5qREBelgrnyP3VPay7WaOu9HwMDea8KxK3510cy4+i2k+GqaOd1wemwRbXxbLs6VBI2UMzsNWaYjOnQ96AjMbRg9MCVuh3XXHsuzx5fDGCD7Kk2mWS4aT8yOC/QHBJXB1nR9lKpdgbEE5Nte8IQWbT4u84Q35BzRzIoKbAGHx60vuHfqt9XrjXvzozlGmfNgG0FK83sHbtlMz2wxkqnfosPUaUwSAAA==");
   --hover:     color-mix(in oklab, var(--fg) 8%, transparent);
   --selection: color-mix(in oklab, var(--accent) 30%, transparent);
+  /* 빗줄기 색 3층 (data-weather="rain"). 네온 빛을 받은 빗줄기 — 강철 밝은 톤 */
+  --rain-far:  rgb(147 173 192 / 0.06);
+  --rain-mid:  rgb(147 173 192 / 0.10);
+  --rain-near: rgb(170 200 220 / 0.18);
 
   --shadow-1: 0 1px 2px rgb(0 0 0 / 0.55);
   --shadow-2: 0 2px 8px rgb(0 0 0 / 0.60);
@@ -295,6 +309,10 @@
     linear-gradient(180deg, #0c1238 0%, #121648 55%, #241a4e 100%);
   --hover:     color-mix(in oklab, var(--fg) 8%, transparent);
   --selection: color-mix(in oklab, var(--accent) 30%, transparent);
+  /* 빗줄기 색 3층 (data-weather="rain"). 등불·라벤더 빛을 받은 빗줄기 */
+  --rain-far:  rgb(179 155 224 / 0.05);
+  --rain-mid:  rgb(179 155 224 / 0.08);
+  --rain-near: rgb(200 180 240 / 0.14);
 
   --shadow-1: 0 1px 2px rgb(5 8 25 / 0.45);
   --shadow-2: 0 2px 8px rgb(5 8 25 / 0.50);
@@ -323,6 +341,7 @@
     --bg-scene: none;
     --hover: color-mix(in oklab, var(--fg) 8%, transparent);
     --selection: color-mix(in oklab, var(--accent) 30%, transparent);
+    --rain-far: rgb(255 255 255 / 0.03); --rain-mid: rgb(255 255 255 / 0.05); --rain-near: rgb(255 255 255 / 0.09);
     --shadow-1: 0 1px 2px rgb(0 0 0 / 0.40);
     --shadow-2: 0 2px 8px rgb(0 0 0 / 0.45);
     --shadow-3: 0 8px 24px rgb(0 0 0 / 0.55);
@@ -464,6 +483,99 @@
 @utility animate-fade-out { animation: hct-fade-out var(--duration-fast) var(--ease-out-soft); }
 @utility animate-pop-in   { animation: hct-pop-in   var(--duration-base) var(--ease-out-soft); }
 @utility animate-pop-out  { animation: hct-pop-out  var(--duration-fast) var(--ease-out-soft); }
+
+/* ---------- 4-2. 날씨 수정자: 비 ----------
+   테마와 직교하는 축. <html data-weather="rain"> 하나로 네 테마 어디에나 얹힌다.
+   (1) 빛이 흐려진다: 그림자를 넓고 옅게, day 는 햇살 대신 흐린 하늘.
+   (2) 빗줄기 3층 — 원근:
+       far  (html::before) 촘촘하고 아주 희미, 짧고 느림.  기울기 1.5°
+       mid  (body::before) 중간.                            기울기 2.5°
+       near (body::after)  드물고 길고 밝고 빠름 + 굵은 물방울. 기울기 3.5°
+       타일 가로 폭을 서로소(61·97·137 …)로 두고 타일당 빗줄기를 3개씩 다른 자리에 찍는다 —
+       가로 반복 주기가 수천 px 이라 규칙이 안 보인다. 세로 주기는 층마다 하나(240/180/300px)라
+       transform 한 번으로 매끄럽게 루프한다. 리페인트 없음, 합성만. JS·캔버스 없음.
+   (3) 강도 --rain-intensity 0~1: 층별 불투명도·속도가 파생된다. 0.3 아래면 near 가 사라져
+       이슬비, 1 이면 폭우. 실사용은 이 변수 하나, 쇼케이스는 슬라이더.
+   (4) 컴포넌트는 비를 모른다. 빗줄기는 z-index:-1 로 지면 위·콘텐츠 아래.
+   prefers-reduced-motion 이면 베이스 규칙이 애니메이션을 0 으로 — 정지된 빗줄기만 남는다.
+   night-city 엔 대안으로 유리 물방울(WebGL 캔버스, 쇼케이스 app/rain-glass.tsx)이 있다 — 아래 data-rain-glass 규칙. */
+[data-weather="rain"] {
+  --shadow-1: 0 1px 3px rgb(0 0 0 / 0.05);
+  --shadow-2: 0 4px 16px rgb(0 0 0 / 0.08);
+  --shadow-3: 0 12px 40px rgb(0 0 0 / 0.12);
+}
+/* day 의 비: 햇살 대신 위에서 내려오는 흐린 하늘, 지면은 살짝 차갑게 */
+[data-weather="rain"]:not([data-theme]),
+[data-weather="rain"][data-theme="day"] {
+  --bg: #f1f1ec;
+  --bg-scene: linear-gradient(180deg, rgb(110 120 135 / 0.14), transparent 60%);
+}
+/* night-lavender 의 비: 등불이 비에 번져 더 넓고 옅게 */
+[data-weather="rain"][data-theme="night-lavender"] {
+  --bg-scene:
+    radial-gradient(90% 60% at 80% 0%, rgb(255 190 120 / 0.11), transparent 70%),
+    linear-gradient(180deg, #0c1238 0%, #121648 55%, #241a4e 100%);
+}
+
+/* 유리 물방울(WebGL 캔버스)이 도는 동안은 빗줄기 층을 끈다 — 캔버스가 조명+유리를 통째로 그리므로.
+   RainGlass 가 실제로 그리기 시작할 때만 <html data-rain-glass> 를 건다(미지원·reduced-motion 이면 빗줄기 유지) */
+[data-weather="rain"][data-rain-glass]::before,
+[data-weather="rain"][data-rain-glass] body::before,
+[data-weather="rain"][data-rain-glass] body::after {
+  display: none;
+}
+
+@keyframes hct-rain-far  { to { transform: skewX(-1.5deg) translate3d(0, 240px, 0); } }
+@keyframes hct-rain-mid  { to { transform: skewX(-2.5deg) translate3d(0, 180px, 0); } }
+@keyframes hct-rain-near { to { transform: skewX(-3.5deg) translate3d(0, 300px, 0); } }
+
+[data-weather="rain"]::before,
+[data-weather="rain"] body::before,
+[data-weather="rain"] body::after {
+  content: "";
+  position: fixed;
+  inset: -300px -40px 0 -40px;   /* 위로 한 루프만큼, 좌우로 기울기만큼 여유 */
+  z-index: -1;
+  pointer-events: none;
+  background-repeat: repeat;
+  will-change: transform;
+}
+/* far — 촘촘·희미·짧음. 타일 61×240 / 97×120 / 83×240 */
+[data-weather="rain"]::before {
+  background-image:
+    radial-gradient(1px 5px at 20px 30px,  var(--rain-far) 0 100%, transparent 100%),
+    radial-gradient(1px 6px at 61px 95px,  var(--rain-far) 0 100%, transparent 100%),
+    radial-gradient(1px 5px at 44px 190px, var(--rain-far) 0 100%, transparent 100%);
+  background-size: 61px 240px, 97px 120px, 83px 240px;
+  background-position: 0 0, 29px 41px, 53px 130px;
+  opacity: clamp(0, calc(var(--rain-intensity) * 1.4), 1);
+  transform: skewX(-1.5deg);
+  animation: hct-rain-far calc(2.4s / max(var(--rain-intensity), 0.15)) linear infinite;
+}
+/* mid — 타일 71×180 / 113×90 / 89×180 */
+[data-weather="rain"] body::before {
+  background-image:
+    radial-gradient(1px 10px at 30px 40px,  var(--rain-mid) 0 100%, transparent 100%),
+    radial-gradient(1px 12px at 80px 70px,  var(--rain-mid) 0 100%, transparent 100%),
+    radial-gradient(1px 9px  at 50px 150px, var(--rain-mid) 0 100%, transparent 100%);
+  background-size: 71px 180px, 113px 90px, 89px 180px;
+  background-position: 0 0, 37px 23px, 61px 97px;
+  opacity: clamp(0, calc((var(--rain-intensity) - 0.15) / 0.6), 1);
+  transform: skewX(-2.5deg);
+  animation: hct-rain-mid calc(1.2s / max(var(--rain-intensity), 0.15)) linear infinite;
+}
+/* near — 드물고 길고 밝음 + 굵은 물방울(건물 처마에서 뭉쳐 떨어지는). 타일 137×300 / 211×150 / 173×300 */
+[data-weather="rain"] body::after {
+  background-image:
+    radial-gradient(1.5px 22px at 60px 60px,   var(--rain-near) 0 100%, transparent 100%),
+    radial-gradient(1.5px 26px at 150px 200px, var(--rain-near) 0 100%, transparent 100%),
+    radial-gradient(2.5px 5px  at 110px 250px, var(--rain-near) 0 100%, transparent 100%);
+  background-size: 137px 300px, 211px 150px, 173px 300px;
+  background-position: 0 0, 71px 53px, 101px 177px;
+  opacity: clamp(0, calc((var(--rain-intensity) - 0.3) / 0.7), 1);
+  transform: skewX(-3.5deg);
+  animation: hct-rain-near calc(0.6s / max(var(--rain-intensity), 0.15)) linear infinite;
+}
 
 /* ---------- 5. 베이스 ---------- */
 @layer base {
