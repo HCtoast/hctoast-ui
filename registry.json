@@ -164,6 +164,22 @@
       ]
     },
     {
+      "name": "fixed-label",
+      "type": "registry:ui",
+      "title": "FixedLabel",
+      "description": "상태에 따라 바뀌는 문구를 가장 긴 문구 크기로 고정. 후보를 같은 그리드 칸에 겹쳐 현재 것만 보인다 — 전환 시 레이아웃이 안 움직인다.",
+      "registryDependencies": [
+        "https://hctoast-ui.vercel.app/r/tokens.json",
+        "https://hctoast-ui.vercel.app/r/cn.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/fixed-label.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "separator",
       "type": "registry:ui",
       "title": "Separator",
