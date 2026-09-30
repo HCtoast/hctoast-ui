@@ -83,6 +83,8 @@ export type SceneOptions = {
   lightSat?: [number, number];
   /** 빛번짐 세기 0~1. 기본 0.5 */
   bloom?: number;
+  /** 블러 반경 배율. 기본 1 (폭의 1/48·1/24). 물방울이 굴절할 "선명한" 텍스처는 0.15 정도 */
+  blur?: number;
 };
 
 function srgbToLinear(c: number) {
@@ -215,7 +217,9 @@ export async function bakeScene(
   const out = document.createElement("canvas");
   out.width = W; out.height = H;
   const octx = out.getContext("2d", { willReadFrequently: true })!;
-  const blurS = Math.max(1, Math.round(W / 48)), blurL = Math.max(2, Math.round(W / 24));
+  const blurK = clamp(options.blur ?? 1, 0, 4);
+  const blurS = Math.max(blurK > 0 ? 1 : 0, Math.round((W / 48) * blurK));
+  const blurL = Math.max(blurK > 0 ? 2 : 0, Math.round((W / 24) * blurK));
   octx.filter = `blur(${blurS}px)`;
   octx.drawImage(base, 0, 0);
   octx.filter = `blur(${blurL}px)`;
@@ -254,17 +258,56 @@ export async function bakeScene(
   };
 }
 
+/** 유리 불투명도 — 아래쪽(bottom)은 floor 이상, 위쪽은 조금 더 두껍게 */
+function glassRange(baked: BakedScene, glass?: number) {
+  const bottom = clamp(glass ?? baked.stats.glassFloor + 0.06, baked.stats.glassFloor, GLASS_MAX);
+  const top = Math.min(0.94, bottom + 0.12);
+  return { top, bottom };
+}
+
 /** 구운 조명 위에 유리를 덮어 `--bg-scene` 값을 만든다. glass 는 아래쪽 불투명도(floor 이상) */
 export function composeScene(
   baked: BakedScene,
   glass?: number,
   glassColor: [number, number, number] = GLASS_DEFAULT,
 ): SceneResult {
-  const bottom = clamp(glass ?? baked.stats.glassFloor + 0.06, baked.stats.glassFloor, GLASS_MAX);
-  const top = Math.min(0.94, bottom + 0.12);
+  const { top, bottom } = glassRange(baked, glass);
   const g = `rgb(${glassColor[0]} ${glassColor[1]} ${glassColor[2]}`;
   const scene = `linear-gradient(180deg, ${g} / ${top.toFixed(2)}) 0%, ${g} / ${bottom.toFixed(2)}) 100%), url("${baked.uri}")`;
   return { scene, stats: { ...baked.stats, glass: bottom }, warnings: baked.warnings };
+}
+
+/** 같은 합성을 캔버스 한 장으로 — CSS 밖(WebGL 텍스처 등)에서 조명+유리를 쓸 때.
+ *  composeScene 과 같은 유리 규칙이라 화면과 텍스처의 어둡기가 일치한다 */
+export async function composeSceneCanvas(
+  baked: BakedScene,
+  glass?: number,
+  glassColor: [number, number, number] = GLASS_DEFAULT,
+): Promise<{ canvas: HTMLCanvasElement; glass: number }> {
+  const { top, bottom } = glassRange(baked, glass);
+  const img = await loadImage(baked.uri);
+  return { canvas: paintGlass(img, top, bottom, glassColor), glass: bottom };
+}
+
+/** 이미지 위에 유리(위 top → 아래 bottom 불투명도)를 칠한 새 캔버스. floor 검사 없음 —
+ *  화면 밖에서 어둡기를 따로 보충하는 경우(예: 물방울 엔진의 김 서림 층)에 쓴다 */
+export function paintGlass(
+  source: HTMLImageElement | HTMLCanvasElement,
+  top: number,
+  bottom: number,
+  glassColor: [number, number, number] = GLASS_DEFAULT,
+): HTMLCanvasElement {
+  const canvas = document.createElement("canvas");
+  canvas.width = source.width; canvas.height = source.height;
+  const ctx = canvas.getContext("2d")!;
+  ctx.drawImage(source, 0, 0);
+  const [r, g, b] = glassColor;
+  const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+  grad.addColorStop(0, `rgb(${r} ${g} ${b} / ${top})`);
+  grad.addColorStop(1, `rgb(${r} ${g} ${b} / ${bottom})`);
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  return canvas;
 }
 
 /** 한 번에: 굽고 유리 덮기 */

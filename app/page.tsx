@@ -55,9 +55,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+import { RainGlass } from "./rain-glass";
 import { ScenePicker } from "./scene-picker";
 import { SliderDemo } from "./slider-demo";
-import { ThemeControl } from "./theme-control";
+import { RainControls, ThemeControl, WeatherControl } from "./theme-control";
 
 const REGISTRY = "https://hctoast-ui.vercel.app";
 
@@ -169,10 +170,20 @@ const RADII = [
 export default function Home() {
   return (
     <div className="min-h-dvh">
+      {/* 유리 물방울 층 — header/main 밖이라 "배경만 보기"에서도 남는다 */}
+      <RainGlass />
       <header className="sticky top-0 z-40 border-b border-border bg-bg/90 backdrop-blur">
         <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-4 px-6 py-4">
           <span className="text-h3 text-fg">HCToast UI</span>
-          <ThemeControl />
+          {/* 버튼 모음이 둘(테마 / 날씨)이라 구분선으로 가른다 — 규칙 */}
+          <div className="flex items-center gap-4">
+            <ThemeControl />
+            <Separator orientation="vertical" className="h-8" />
+            <WeatherControl />
+          </div>
+        </div>
+        <div className="mx-auto max-w-4xl px-6 pb-2">
+          <RainControls />
         </div>
         <nav className="mx-auto max-w-4xl overflow-x-auto px-6 pb-3">
           <ul className="flex gap-4">

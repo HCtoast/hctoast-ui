@@ -15,10 +15,20 @@ import {
   GLASS_MAX,
   loadImage,
   SCENE_DETAIL,
-  type BakedScene,
   type SceneDetail,
 } from "@/registry/lib/scene-from-photo";
 
+import {
+  KEY_PHOTOS,
+  KEY_REMOVED,
+  KEY_SCENE,
+  notifySceneChange,
+  PRESETS,
+  readJson,
+  writeJson,
+  type Photo,
+  type Saved,
+} from "./scene-store";
 import { useTheme } from "./theme-control";
 
 /* night-city 전용 "조명 사진" 선택기 (쇼케이스).
@@ -26,56 +36,15 @@ import { useTheme } from "./theme-control";
    --bg-scene 에 넣는다. 사용자가 만지는 건 둘: 조명 양(면적 %)과 창밖 밝기.
    업로드 사진은 800px 로 줄여 localStorage 에 두므로 새로고침 뒤에도 남고 다시 구울 수 있다.
    사진마다 오른쪽 위 X 로 지운다. 다 지우면 조명을 빼고 안내 문구를 보인다.
-   프리셋 사진은 임시(레퍼런스 스크린샷) — 확정 시 직접 찍은 사진/CC0 로 교체. */
+   상태·프리셋·저장 키는 scene-store 에 — 유리 물방울(RainGlass)이 같은 선택을 읽는다. */
 
-const KEY_SCENE = "hctoast-scene";
-const KEY_PHOTOS = "hctoast-scene-photos";
-const KEY_REMOVED = "hctoast-scene-removed";
 const UPLOAD_MAX_W = 800;
-
-type Photo = { id: string; label: string; src: string; kind: "preset" | "upload" };
-
-const PRESETS: Photo[] = [
-  { id: "city-balcony", label: "발코니", src: "/scenes/city-balcony.jpg", kind: "preset" },
-  { id: "city-rain-glass", label: "젖은 유리", src: "/scenes/city-rain-glass.jpg", kind: "preset" },
-  { id: "city-pool", label: "수영장", src: "/scenes/city-pool.webp", kind: "preset" },
-  { id: "honami-wisteria", label: "호나미 등나무", src: "/scenes/honami-wisteria.jpg", kind: "preset" },
-  { id: "honami-tower", label: "호나미 타워", src: "/scenes/honami-tower.jpg", kind: "preset" },
-];
 
 const DETAILS: { id: SceneDetail; label: string }[] = [
   { id: "lights", label: "빛만" },
   { id: "silhouette", label: "실루엣" },
   { id: "shapes", label: "형체" },
 ];
-
-type Saved = {
-  source: string; // Photo.id
-  detail: SceneDetail;
-  coverage: number;
-  glass: number | null; // null = 자동(바닥값 + 조금)
-  baked: BakedScene;
-};
-
-function readJson<T>(key: string, fallback: T): T {
-  if (typeof window === "undefined") return fallback;
-  try {
-    const raw = localStorage.getItem(key);
-    return raw ? (JSON.parse(raw) as T) : fallback;
-  } catch {
-    return fallback; // 손상된 저장값은 무시
-  }
-}
-
-function writeJson(key: string, value: unknown | null) {
-  try {
-    if (value === null) localStorage.removeItem(key);
-    else localStorage.setItem(key, JSON.stringify(value));
-    return true;
-  } catch {
-    return false; // 용량 초과 등
-  }
-}
 
 function applyScene(scene: string | null) {
   const root = document.documentElement;
@@ -142,6 +111,7 @@ export function ScenePicker() {
   const saveScene = React.useCallback((s: Saved | null) => {
     setSaved(s);
     if (!writeJson(KEY_SCENE, s)) setError("브라우저 저장 공간이 부족해서 선택을 기억하지 못했어요.");
+    notifySceneChange();
   }, []);
 
   const rebake = React.useCallback(
