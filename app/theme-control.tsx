@@ -3,7 +3,6 @@
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { SliderField } from "@/components/ui/slider";
 
 const THEMES = ["day", "night", "night-city", "night-lavender"] as const;
@@ -105,7 +104,7 @@ const FX_OPTIONS: { id: RainFx; label: string }[] = [
   { id: "streaks", label: "빗줄기" },
   { id: "glass", label: "유리 물방울" },
 ];
-export function RainFxControl() {
+export function RainFxControl({ disabled }: { disabled?: boolean }) {
   const fx = useRainFx();
   return (
     <div className="flex gap-2" role="group" aria-label="비 표현">
@@ -115,6 +114,7 @@ export function RainFxControl() {
           size="sm"
           variant={fx === o.id ? "primary" : "secondary"}
           aria-pressed={fx === o.id}
+          disabled={disabled}
           onClick={() => applyFx(o.id)}
         >
           {o.label}
@@ -124,7 +124,8 @@ export function RainFxControl() {
   );
 }
 
-/* 비 강도 — --rain-intensity 를 <html> 인라인으로. 비가 켜졌을 때만 보인다 */
+/* 비 강도 — --rain-intensity 를 <html> 인라인으로. 비가 꺼져 있으면 숨기지 않고 비활성 —
+   보기 설정 패널에서 비를 켜고 끌 때 아래 줄들이 들썩이지 않게(크기 불변 규칙) */
 const INTENSITY_KEY = "hctoast-rain-intensity";
 function readIntensity() {
   if (typeof window === "undefined") return 0.6;
@@ -142,7 +143,6 @@ export function RainIntensity() {
       // 저장 실패는 무시
     }
   }, [v]);
-  if (!rain) return null;
   return (
     <SliderField
       layout="inline"
@@ -153,36 +153,20 @@ export function RainIntensity() {
       snap={5}
       value={[Math.round(v * 100)]}
       onValueChange={([x]) => setV(x / 100)}
+      disabled={!rain}
       aria-label="비 강도"
       className="w-full"
     />
   );
 }
 
-/* 비가 켜졌을 때의 조절 줄: [빗줄기|유리 물방울] | 강도. 표현 전환은 night-city 에서만(다른 테마는 빗줄기뿐).
-   버튼 모음과 슬라이더는 구분선으로 가른다 — 규칙 */
-export function RainControls() {
+/* 유리 물방울이 도는 동안 프레임 간격 p90 — 16.7ms 근처면 60fps 유지, 33 을 넘으면 버벅임 (쇼케이스 판단용).
+   캔버스가 안 돌 때는 "—" */
+export function FrameMeter() {
   const rain = useRain();
   const theme = useTheme();
   const fx = useRainFx();
-  const glass = theme === "night-city" && fx === "glass";
-  if (!rain) return null;
-  return (
-    <div className="flex items-center gap-4">
-      {theme === "night-city" && (
-        <>
-          <RainFxControl />
-          <Separator orientation="vertical" className="h-8" />
-        </>
-      )}
-      <RainIntensity />
-      {glass && <FrameMeter />}
-    </div>
-  );
-}
-
-/* 유리 물방울이 도는 동안 프레임 간격 p90 — 16.7ms 근처면 60fps 유지, 33 을 넘으면 버벅임 (쇼케이스 판단용) */
-function FrameMeter() {
+  const running = rain && theme === "night-city" && fx === "glass";
   const [ms, setMs] = React.useState<number | null>(null);
   React.useEffect(() => {
     const onFrame = (e: Event) => setMs((e as CustomEvent<number>).detail);
@@ -191,7 +175,7 @@ function FrameMeter() {
   }, []);
   return (
     <span className="w-24 shrink-0 whitespace-nowrap text-right text-caption text-fg-subtle tabular-nums">
-      {ms === null ? "프레임 —" : `프레임 ${ms.toFixed(0)}ms`}
+      {!running || ms === null ? "프레임 —" : `프레임 ${ms.toFixed(0)}ms`}
     </span>
   );
 }

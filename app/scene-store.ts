@@ -1,7 +1,9 @@
 import type { BakedScene, SceneDetail } from "@/registry/lib/scene-from-photo";
 
-/* night-city 조명 사진 선택 상태 (쇼케이스). 선택기가 쓰고 저장하며, 유리 물방울(RainGlass)이
-   같은 사진·조명 양·유리로 텍스처를 구우려고 읽는다. 저장소는 localStorage, 변경 알림은 window 이벤트. */
+/* night-city 조명 사진 선택 상태 (쇼케이스). 선택기가 쓰고, 조명을 실제로 거는 SceneLayer 와
+   유리 물방울(RainGlass)이 읽는다. 저장소는 localStorage, 변경 알림은 window 이벤트.
+   선택기는 "보기 설정" 패널 안에 있어 패널을 닫으면 언마운트된다 — 그래서 조명 적용은 선택기가 아니라
+   늘 떠 있는 SceneLayer 가 이 스토어를 구독해서 한다. */
 
 export const KEY_SCENE = "hctoast-scene";
 export const KEY_PHOTOS = "hctoast-scene-photos";
@@ -47,8 +49,42 @@ export function writeJson(key: string, value: unknown | null) {
   }
 }
 
+/* 지금 고른 조명의 원문(JSON 문자열). 모듈 캐시를 정본으로 두고 localStorage 는 뒤따라 쓴다 —
+   저장 공간이 차서 쓰기가 실패해도 이번 세션의 화면(SceneLayer·RainGlass)은 고른 조명을 그대로 보여야 해서.
+   문자열이라 useSyncExternalStore 스냅샷으로 써도 값이 같으면 다시 그리지 않는다. */
+let sceneCache: string | null | undefined; // undefined = 아직 안 읽음
+
+export function sceneSnapshot(): string | null {
+  if (typeof window === "undefined") return null;
+  if (sceneCache === undefined) {
+    try {
+      sceneCache = localStorage.getItem(KEY_SCENE);
+    } catch {
+      sceneCache = null;
+    }
+  }
+  return sceneCache;
+}
+
+export function parseScene(raw: string | null): Saved | null {
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as Saved;
+  } catch {
+    return null; // 손상된 저장값은 무시
+  }
+}
+
 export function readSavedScene() {
-  return readJson<Saved | null>(KEY_SCENE, null);
+  return parseScene(sceneSnapshot());
+}
+
+/** 조명 선택을 바꾼다. 저장에 실패하면 false — 화면에는 그래도 반영된다 */
+export function storeScene(s: Saved | null): boolean {
+  sceneCache = s ? JSON.stringify(s) : null;
+  const ok = writeJson(KEY_SCENE, s);
+  notifySceneChange();
+  return ok;
 }
 
 /** 프리셋 + 업로드에서 id 로 찾는다 (숨긴 프리셋도 포함 — 이미 고른 조명은 유지돼야 하므로) */
@@ -61,10 +97,15 @@ export function notifySceneChange() {
 }
 
 export function subscribeScene(onChange: () => void) {
+  // 다른 탭이 바꾸면 캐시를 버리고 다시 읽는다
+  const onStorage = (e: StorageEvent) => {
+    if (e.key === KEY_SCENE || e.key === null) sceneCache = undefined;
+    onChange();
+  };
   window.addEventListener(SCENE_EVENT, onChange);
-  window.addEventListener("storage", onChange);
+  window.addEventListener("storage", onStorage);
   return () => {
     window.removeEventListener(SCENE_EVENT, onChange);
-    window.removeEventListener("storage", onChange);
+    window.removeEventListener("storage", onStorage);
   };
 }

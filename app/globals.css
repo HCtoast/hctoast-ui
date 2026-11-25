@@ -8,6 +8,7 @@
    Tailwind 가 실제 유틸리티로 생성하지 않도록 마크다운을 스캔 대상에서 뺀다. */
 @source not "../**/*.md";
 
-/* "배경만 보기" — 조명 사진 선택기에서 켠다. 카드·헤더를 숨기고 조명만 남긴다. 돌아가기 바만 보인다 */
-[data-peek] header, [data-peek] main { visibility: hidden; }
+/* "배경만 보기" — 보기 설정 패널에서 켠다(app/peek.tsx). 헤더·본문·푸터를 숨기고 지면·조명·비만 남긴다.
+   돌아가기 바만 보인다 */
+[data-peek] header, [data-peek] main, [data-peek] footer { visibility: hidden; }
 [data-peek] [data-slot="peek-bar"] { visibility: visible; }

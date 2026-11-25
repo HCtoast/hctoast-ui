@@ -5,6 +5,16 @@ import { expect, test } from "@playwright/test";
    (2) 비 토글: 켜짐 ↔ 꺼짐 동일
    (3) 토글 후보(임시 /toggle-lab): 각 후보의 켜짐 ↔ 꺼짐 동일 */
 
+/** 테마·비 버튼은 헤더의 "보기 설정" 패널 안에 있다 */
+async function openSettings(page: import("@playwright/test").Page) {
+  await page.getByRole("button", { name: "보기 설정" }).click();
+  await page.locator('[data-slot="popover-content"]').waitFor();
+  // 등장 애니메이션(pop-in, 0.98 배율)이 끝난 뒤에 잰다
+  await page.waitForFunction(() =>
+    document.querySelector('[data-slot="popover-content"]')!.getAnimations().every((a) => a.playState === "finished"),
+  );
+}
+
 async function box(locator: import("@playwright/test").Locator) {
   const b = (await locator.boundingBox())!;
   return { w: Math.round(b.width * 10) / 10, h: Math.round(b.height * 10) / 10 };
@@ -12,6 +22,7 @@ async function box(locator: import("@playwright/test").Locator) {
 
 test("테마 버튼: 선택이 바뀌어도 크기가 같다", async ({ page }) => {
   await page.goto("/");
+  await openSettings(page);
   const group = page.locator('[aria-label="테마 선택"] button');
   const n = await group.count();
   const before = [];
@@ -23,7 +34,8 @@ test("테마 버튼: 선택이 바뀌어도 크기가 같다", async ({ page }) 
 
 test("비 토글: 켜짐/꺼짐 크기가 같다", async ({ page }) => {
   await page.goto("/");
-  const btn = page.locator("header button", { hasText: /^비$/ });
+  await openSettings(page);
+  const btn = page.locator('[data-slot="popover-content"] button', { hasText: /^비$/ });
   const off = await box(btn);
   await btn.click();
   await page.waitForTimeout(250);

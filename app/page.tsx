@@ -55,10 +55,13 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+import { DisplaySizeDemo } from "./display-size-demo";
+import { HeaderNav } from "./header-nav";
+import { PeekBar } from "./peek";
 import { RainGlass } from "./rain-glass";
-import { ScenePicker } from "./scene-picker";
+import { SceneLayer } from "./scene-picker";
 import { SliderDemo } from "./slider-demo";
-import { RainControls, ThemeControl, WeatherControl } from "./theme-control";
+import { ViewSettings } from "./view-settings";
 
 const REGISTRY = "https://hctoast-ui.vercel.app";
 
@@ -146,8 +149,8 @@ const SEMANTIC_SWATCHES: [string, string][] = [
   ["accent", "bg-accent"],
 ];
 
+/* Display 는 크기 미리보기 슬라이더가 붙은 DisplaySizeDemo 로 따로 그린다 */
 const TYPE_SCALE = [
-  ["text-display", "Display 40"],
   ["text-h1", "Heading 1 · 32"],
   ["text-h2", "Heading 2 · 24"],
   ["text-h3", "Heading 3 · 20"],
@@ -172,33 +175,16 @@ export default function Home() {
     <div className="min-h-dvh">
       {/* 유리 물방울 층 — header/main 밖이라 "배경만 보기"에서도 남는다 */}
       <RainGlass />
+      {/* 조명(--bg-scene)을 거는 층과 "배경만 보기" 돌아오기 바 — 보기 설정 패널은 닫히면 사라지므로 여기 늘 둔다 */}
+      <SceneLayer />
+      <PeekBar />
+      {/* 헤더엔 제목·보기 설정 버튼·목차만. 상태에 따라 줄이 생기거나 사라지지 않아 높이가 늘 같다 */}
       <header className="sticky top-0 z-40 border-b border-border bg-bg/90 backdrop-blur">
-        <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-4 px-6 py-4">
+        <div className="mx-auto flex max-w-4xl items-center justify-between gap-4 px-6 py-4">
           <span className="text-h3 text-fg">HCToast UI</span>
-          {/* 버튼 모음이 둘(테마 / 날씨)이라 구분선으로 가른다 — 규칙 */}
-          <div className="flex items-center gap-4">
-            <ThemeControl />
-            <Separator orientation="vertical" className="h-8" />
-            <WeatherControl />
-          </div>
+          <ViewSettings />
         </div>
-        <div className="mx-auto max-w-4xl px-6 pb-2">
-          <RainControls />
-        </div>
-        <nav className="mx-auto max-w-4xl overflow-x-auto px-6 pb-3">
-          <ul className="flex gap-4">
-            {NAV.map((n) => (
-              <li key={n.id}>
-                <a
-                  href={`#${n.id}`}
-                  className="whitespace-nowrap text-body-sm text-fg-muted transition-base hover:text-fg"
-                >
-                  {n.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <HeaderNav items={NAV} />
       </header>
 
       <main className="mx-auto flex max-w-4xl flex-col gap-12 px-6 py-12">
@@ -214,8 +200,6 @@ export default function Home() {
             자동으로 함께 가져오므로 따로 받을 필요가 없습니다.
           </p>
         </section>
-
-        <ScenePicker />
 
         <DocSection
           id="tokens"
@@ -250,6 +234,7 @@ export default function Home() {
             <div className="flex flex-col gap-2">
               <p className="text-label text-fg-muted">타이포 스케일</p>
               <div className="flex flex-col gap-4 rounded-lg border border-border bg-surface p-6 shadow-e1">
+                <DisplaySizeDemo />
                 {TYPE_SCALE.map(([cls, label]) => (
                   <p key={cls} className={`${cls} text-fg`}>
                     {label}

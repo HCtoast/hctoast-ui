@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { Eye, ImagePlus, RotateCcw } from "lucide-react";
+import { ImagePlus, RotateCcw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Dismiss } from "@/components/ui/dismiss";
@@ -21,22 +21,26 @@ import {
 import {
   KEY_PHOTOS,
   KEY_REMOVED,
-  KEY_SCENE,
-  notifySceneChange,
+  parseScene,
   PRESETS,
   readJson,
+  readSavedScene,
+  sceneSnapshot,
+  storeScene,
+  subscribeScene,
   writeJson,
   type Photo,
   type Saved,
 } from "./scene-store";
 import { useTheme } from "./theme-control";
 
-/* night-city 전용 "조명 사진" 선택기 (쇼케이스).
+/* night-city 전용 "조명 사진" 선택기 (쇼케이스, "보기 설정" 패널 안).
    목록 = 프리셋(지운 것 제외) + 내 사진(업로드). 사진을 고르면 scene-from-photo 가 조명으로 구워
    --bg-scene 에 넣는다. 사용자가 만지는 건 둘: 조명 양(면적 %)과 창밖 밝기.
    업로드 사진은 800px 로 줄여 localStorage 에 두므로 새로고침 뒤에도 남고 다시 구울 수 있다.
    사진마다 오른쪽 위 X 로 지운다. 다 지우면 조명을 빼고 안내 문구를 보인다.
-   상태·프리셋·저장 키는 scene-store 에 — 유리 물방울(RainGlass)이 같은 선택을 읽는다. */
+   상태·프리셋·저장 키는 scene-store 에. 조명을 body 에 실제로 거는 건 SceneLayer — 패널을 닫으면
+   선택기는 언마운트되는데 조명까지 같이 빠지면 안 되므로 둘을 나눴다. */
 
 const UPLOAD_MAX_W = 800;
 
@@ -63,18 +67,29 @@ async function shrinkForStorage(file: File): Promise<string> {
   return c.toDataURL("image/jpeg", 0.82);
 }
 
-export function ScenePicker() {
+/** 고른 조명을 --bg-scene 에 건다. 페이지에 늘 떠 있다(night-city 일 때만 덮어쓴다) */
+export function SceneLayer() {
   const theme = useTheme();
-  const active = theme === "night-city";
-  // 서버에선 active=false 라 null 을 그리고, 클라이언트 첫 렌더도 서버 스냅샷("day")을 쓰므로
-  // 하이드레이션 불일치가 없다.
-  const [saved, setSaved] = React.useState<Saved | null>(() => readJson<Saved | null>(KEY_SCENE, null));
+  const raw = React.useSyncExternalStore(subscribeScene, sceneSnapshot, () => null);
+  const scene = React.useMemo(() => {
+    const s = parseScene(raw);
+    return s ? composeScene(s.baked, s.glass ?? undefined).scene : null;
+  }, [raw]);
+  React.useEffect(() => {
+    applyScene(theme === "night-city" ? scene : null);
+    return () => applyScene(null);
+  }, [theme, scene]);
+  return null;
+}
+
+/** 패널 안에서만 마운트된다 — 클라이언트 전용이라 localStorage 를 바로 읽는다 */
+export function ScenePicker() {
+  const [saved, setSaved] = React.useState<Saved | null>(readSavedScene);
   const [photos, setPhotos] = React.useState<Photo[]>(() => readJson<Photo[]>(KEY_PHOTOS, []));
   const [removed, setRemoved] = React.useState<string[]>(() => readJson<string[]>(KEY_REMOVED, []));
   const [busy, setBusy] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const [dragOver, setDragOver] = React.useState(false);
-  const [peek, setPeek] = React.useState(false); // 배경만 보기
   const dragDepth = React.useRef(0); // 자식 요소를 지날 때 enter/leave 가 번갈아 와서 깊이로 센다
   const inputRef = React.useRef<HTMLInputElement>(null);
   const bakeTimer = React.useRef<number | null>(null);
@@ -90,28 +105,9 @@ export function ScenePicker() {
     [saved],
   );
 
-  React.useEffect(() => {
-    applyScene(active && result ? result.scene : null);
-    return () => applyScene(null);
-  }, [active, result]);
-
-  // 배경만 보기: <html data-peek> 로 카드·헤더를 숨긴다(globals.css). Esc 로 돌아온다
-  React.useEffect(() => {
-    const root = document.documentElement;
-    if (!(peek && active)) {
-      delete root.dataset.peek;
-      return;
-    }
-    root.dataset.peek = "";
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setPeek(false); };
-    window.addEventListener("keydown", onKey);
-    return () => { window.removeEventListener("keydown", onKey); delete root.dataset.peek; };
-  }, [peek, active]);
-
   const saveScene = React.useCallback((s: Saved | null) => {
     setSaved(s);
-    if (!writeJson(KEY_SCENE, s)) setError("브라우저 저장 공간이 부족해서 선택을 기억하지 못했어요.");
-    notifySceneChange();
+    if (!storeScene(s)) setError("브라우저 저장 공간이 부족해서 선택을 기억하지 못했어요.");
   }, []);
 
   const rebake = React.useCallback(
@@ -201,13 +197,11 @@ export function ScenePicker() {
     saveScene(null);
   };
 
-  if (!active) return null;
-
   const stats = result?.stats;
   const floor = stats?.glassFloor ?? 0.6;
   const empty = list.length === 0;
 
-  // 드래그 앤 드롭 — 카드 전체가 드롭 영역. 끌고 들어오면 테두리가 accent 로
+  // 드래그 앤 드롭 — 선택기 전체가 드롭 영역. 끌고 들어오면 테두리가 accent 로
   const onDragEnter = (e: React.DragEvent) => {
     if (!e.dataTransfer.types.includes("Files")) return;
     e.preventDefault();
@@ -227,22 +221,19 @@ export function ScenePicker() {
   };
 
   return (
-    <section
+    <div
       onDragEnter={onDragEnter}
       onDragOver={(e) => { if (e.dataTransfer.types.includes("Files")) e.preventDefault(); }}
       onDragLeave={onDragLeave}
       onDrop={onDrop}
       data-dragover={dragOver || undefined}
-      className="flex flex-col gap-4 rounded-lg border border-border bg-surface p-6 shadow-e1 transition-base data-[dragover]:border-accent data-[dragover]:bg-accent/15"
+      // 테두리는 늘 두고 색만 바꾼다(드래그 중에 크기가 안 변하게)
+      className="flex flex-col gap-4 rounded-lg border border-transparent transition-base data-[dragover]:border-accent data-[dragover]:bg-accent/15"
     >
-      <div className="flex flex-col gap-2">
-        <h2 className="text-h3 text-fg">조명 사진 (night-city)</h2>
-        <p className="text-body-sm text-fg-muted">
-          사진에서 가장 밝은 부분만 조명으로 남기고 빛번짐을 구워 유리 아래에 깐다. 어떤 사진이든
-          &ldquo;그 사진의 밤&rdquo;이 된다. 조명 양과 창밖 밝기만 조절할 수 있고, 밝기는 글자가 읽히는
-          최대치 위로 올라가지 않는다. 사진은 이 카드에 끌어다 놓아도 된다.
-        </p>
-      </div>
+      <p className="text-body-sm text-fg-muted">
+        사진에서 가장 밝은 부분만 조명으로 남기고 빛번짐을 구워 유리 아래에 깐다. 밝기는 글자가 읽히는
+        최대치 위로 올라가지 않는다. 사진은 여기에 끌어다 놓아도 된다.
+      </p>
 
       {empty ? (
         <p className="text-body-sm text-fg-muted">조명을 모두 뺐어요. 목록에 사진을 먼저 추가해주세요.</p>
@@ -316,9 +307,6 @@ export function ScenePicker() {
         <Button size="sm" variant="ghost" disabled={busy || !saved} onClick={reset}>
           <RotateCcw /> 기본 조명
         </Button>
-        <Button size="sm" variant="ghost" onClick={() => setPeek(true)}>
-          <Eye /> 배경만 보기
-        </Button>
         {removed.length > 0 && (
           <Button size="sm" variant="link" disabled={busy} onClick={restorePresets}>
             지운 프리셋 되살리기
@@ -363,13 +351,6 @@ export function ScenePicker() {
           ))}
         </ul>
       )}
-      {peek && (
-        <div data-slot="peek-bar" className="fixed inset-x-0 bottom-6 z-40 flex justify-center">
-          <Button variant="secondary" onClick={() => setPeek(false)}>
-            <Eye /> 카드 다시 보기 (Esc)
-          </Button>
-        </div>
-      )}
 
       {stats && (
         <p className="text-caption text-fg-subtle">
@@ -377,6 +358,6 @@ export function ScenePicker() {
           {stats.dominantHue === null ? "없음" : `${stats.dominantHue}°`} · {(stats.bytes / 1024).toFixed(1)}KB
         </p>
       )}
-    </section>
+    </div>
   );
 }

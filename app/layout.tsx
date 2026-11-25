@@ -19,7 +19,9 @@ export const metadata: Metadata = {
 };
 
 // 하이드레이션 전에 저장된 테마를 적용해 FOUC / 미스매치를 막는다.
-const themeInit = `(function(){try{var t=localStorage.getItem("hctoast-theme");if(t==="day"||t==="night"||t==="night-city"||t==="night-lavender"){document.documentElement.dataset.theme=t;}var w=localStorage.getItem("hctoast-weather");if(w==="rain"){document.documentElement.dataset.weather="rain";}var ri=Number(localStorage.getItem("hctoast-rain-intensity"));if(ri>0&&ri<=1){document.documentElement.style.setProperty("--rain-intensity",String(ri));}if(localStorage.getItem("hctoast-rain-fx")==="glass"){document.documentElement.dataset.rainFx="glass";}}catch(e){}})();`;
+// 색 토큰 덮어쓰기(app/token-overrides.ts)는 미리 만들어 저장해 둔 CSS 문자열을 <style> 로 그대로 넣는다 —
+// 덮어쓰기 규칙을 이 한 줄짜리 스크립트에 다시 짜지 않으려고.
+const themeInit = `(function(){try{var t=localStorage.getItem("hctoast-theme");if(t==="day"||t==="night"||t==="night-city"||t==="night-lavender"){document.documentElement.dataset.theme=t;}var w=localStorage.getItem("hctoast-weather");if(w==="rain"){document.documentElement.dataset.weather="rain";}var ri=Number(localStorage.getItem("hctoast-rain-intensity"));if(ri>0&&ri<=1){document.documentElement.style.setProperty("--rain-intensity",String(ri));}if(localStorage.getItem("hctoast-rain-fx")==="glass"){document.documentElement.dataset.rainFx="glass";}var tc=localStorage.getItem("hctoast-token-css");if(tc){var s=document.createElement("style");s.id="hctoast-token-overrides";s.textContent=tc;document.head.appendChild(s);}}catch(e){}})();`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
