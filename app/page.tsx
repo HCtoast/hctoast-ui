@@ -57,7 +57,7 @@ import {
 
 import { DisplaySizeDemo } from "./display-size-demo";
 import { HeaderNav } from "./header-nav";
-import { PeekBar } from "./peek";
+import { RainHost } from "./rain-host";
 import { RainGlass } from "./rain-glass";
 import { SceneLayer } from "./scene-picker";
 import { SliderDemo } from "./slider-demo";
@@ -81,6 +81,7 @@ const NAV: { id: string; label: string }[] = [
   { id: "select", label: "Select" },
   { id: "tabs", label: "Tabs" },
   { id: "slider", label: "Slider" },
+  { id: "rain", label: "Rain" },
 ];
 
 function Snippet({ children }: { children: React.ReactNode }) {
@@ -175,9 +176,10 @@ export default function Home() {
     <div className="min-h-dvh">
       {/* 유리 물방울 층 — header/main 밖이라 "배경만 보기"에서도 남는다 */}
       <RainGlass />
-      {/* 조명(--bg-scene)을 거는 층과 "배경만 보기" 돌아오기 바 — 보기 설정 패널은 닫히면 사라지므로 여기 늘 둔다 */}
+      {/* 캔버스 빗줄기(선택 설치 항목 rain). 보기 설정에서 CSS 로 바꾸면 내려간다 */}
+      <RainHost />
+      {/* 조명(--bg-scene)을 거는 층 — 보기 설정 창은 닫히면 사라지므로 여기 늘 둔다 */}
       <SceneLayer />
-      <PeekBar />
       {/* 헤더엔 제목·보기 설정 버튼·목차만. 상태에 따라 줄이 생기거나 사라지지 않아 높이가 늘 같다 */}
       <header className="sticky top-0 z-40 border-b border-border bg-bg/90 backdrop-blur">
         <div className="mx-auto flex max-w-4xl items-center justify-between gap-4 px-6 py-4">
@@ -602,6 +604,26 @@ export default function Home() {
         >
           <Demo layout="col">
             <SliderDemo />
+          </Demo>
+        </DocSection>
+
+        <DocSection
+          id="rain"
+          title="Rain (선택 설치)"
+          subtitle="캔버스 빗줄기 · 빗방울마다 속도·길이·밝기가 다르고 바람이 흔들린다 · 기본 설치(tokens)엔 CSS 빗줄기만 들어 있다"
+          register="rain"
+        >
+          <Demo layout="col">
+            <p className="text-body text-fg">
+              앱 루트(layout)에 <code className="text-code">{"<Rain />"}</code> 한 번. 비는 그대로{" "}
+              <code className="text-code">{'<html data-weather="rain">'}</code> 로 켜고 끈다. 색·강도는
+              theme.css 토큰(<code className="text-code">--rain-far/mid/near</code>,{" "}
+              <code className="text-code">--rain-intensity</code>)을 따른다.
+            </p>
+            <p className="text-body-sm text-fg-muted">
+              도는 동안 CSS 빗줄기 층은 꺼진다. 움직임 줄이기 설정이거나 캔버스를 못 쓰면 CSS 빗줄기가 그대로 남는다.
+              헤더 &ldquo;보기 설정 → 빗줄기 그리기&rdquo;에서 CSS 판과 바로 비교할 수 있다.
+            </p>
           </Demo>
         </DocSection>
       </main>

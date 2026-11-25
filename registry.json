@@ -349,6 +349,21 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "rain",
+      "type": "registry:ui",
+      "title": "Rain (캔버스 빗줄기, 선택 설치)",
+      "description": "빗방울마다 속도·길이·밝기가 다르고 바람이 흔들리는 캔버스 빗줄기. 기본 설치(tokens)의 CSS 빗줄기를 대신한다. 앱 루트에 <Rain /> 한 번, 비는 그대로 <html data-weather=\"rain\">. reduced-motion·캔버스 실패 시 CSS 빗줄기로 남는다.",
+      "registryDependencies": [
+        "https://hctoast-ui.vercel.app/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/rain.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

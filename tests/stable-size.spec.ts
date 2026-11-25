@@ -8,10 +8,10 @@ import { expect, test } from "@playwright/test";
 /** 테마·비 버튼은 헤더의 "보기 설정" 패널 안에 있다 */
 async function openSettings(page: import("@playwright/test").Page) {
   await page.getByRole("button", { name: "보기 설정" }).click();
-  await page.locator('[data-slot="popover-content"]').waitFor();
+  await page.locator('[data-slot="view-settings"]').waitFor();
   // 등장 애니메이션(pop-in, 0.98 배율)이 끝난 뒤에 잰다
   await page.waitForFunction(() =>
-    document.querySelector('[data-slot="popover-content"]')!.getAnimations().every((a) => a.playState === "finished"),
+    document.querySelector('[data-slot="view-settings"]')!.getAnimations().every((a) => a.playState === "finished"),
   );
 }
 
@@ -35,7 +35,7 @@ test("테마 버튼: 선택이 바뀌어도 크기가 같다", async ({ page }) 
 test("비 토글: 켜짐/꺼짐 크기가 같다", async ({ page }) => {
   await page.goto("/");
   await openSettings(page);
-  const btn = page.locator('[data-slot="popover-content"] button', { hasText: /^비$/ });
+  const btn = page.locator('[data-slot="view-settings"] button', { hasText: /^비$/ });
   const off = await box(btn);
   await btn.click();
   await page.waitForTimeout(250);

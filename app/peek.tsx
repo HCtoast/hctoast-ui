@@ -6,8 +6,8 @@ import { Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 /* "배경만 보기" — <html data-peek> 하나로 헤더·본문·푸터를 숨기고(globals.css) 지면·조명·비만 남긴다.
-   예전엔 조명 사진 선택기 안의 상태였고 night-city 에서만 됐다. 지금은 "보기 설정" 패널에서 켜는데
-   패널은 켜는 순간 닫히며 언마운트되므로, 상태는 DOM 속성에 두고 돌아오기 바(PeekBar)는 페이지에 늘 둔다.
+   켜고 끄는 건 보기 설정 창의 토글. 창은 본문 밖(body 포털)이라 배경만 보기 중에도 떠 있어서, 배경을 보며
+   바로 조절할 수 있다(사용자 요청 2026-11-25). 창을 닫았다면 PeekBar 가 돌아오기 버튼을 띄운다.
    비·햇살·라벤더 하늘도 배경이라 모든 테마에서 쓴다. */
 
 function subscribe(onChange: () => void) {
@@ -15,26 +15,28 @@ function subscribe(onChange: () => void) {
   observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-peek"] });
   return () => observer.disconnect();
 }
-const isPeeking = () => document.documentElement.hasAttribute("data-peek");
+export const isPeeking = () => document.documentElement.hasAttribute("data-peek");
 
-export function enterPeek() {
-  document.documentElement.dataset.peek = "";
+export function usePeek() {
+  return React.useSyncExternalStore(subscribe, isPeeking, () => false);
 }
-function exitPeek() {
+export function exitPeek() {
   delete document.documentElement.dataset.peek;
 }
+export function togglePeek() {
+  if (isPeeking()) exitPeek();
+  else document.documentElement.dataset.peek = "";
+}
 
+/** 배경만 보기 중인데 보기 설정 창이 닫혀 있을 때의 돌아오기 버튼. Esc 로도 돌아온다 */
 export function PeekBar() {
-  const peek = React.useSyncExternalStore(subscribe, isPeeking, () => false);
   React.useEffect(() => {
-    if (!peek) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") exitPeek();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [peek]);
-  if (!peek) return null;
+  }, []);
   return (
     <div data-slot="peek-bar" className="fixed inset-x-0 bottom-6 z-40 flex justify-center">
       <Button variant="secondary" onClick={exitPeek}>

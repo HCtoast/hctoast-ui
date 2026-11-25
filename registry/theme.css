@@ -498,7 +498,9 @@
        이슬비, 1 이면 폭우. 실사용은 이 변수 하나, 쇼케이스는 슬라이더.
    (4) 컴포넌트는 비를 모른다. 빗줄기는 z-index:-1 로 지면 위·콘텐츠 아래.
    prefers-reduced-motion 이면 베이스 규칙이 애니메이션을 0 으로 — 정지된 빗줄기만 남는다.
-   night-city 엔 대안으로 유리 물방울(WebGL 캔버스, 쇼케이스 app/rain-glass.tsx)이 있다 — 아래 data-rain-glass 규칙. */
+   night-city 엔 대안으로 유리 물방울(WebGL 캔버스, 쇼케이스 app/rain-glass.tsx)이 있다 — 아래 data-rain-glass 규칙.
+   (5) 이 CSS 판은 층마다 무늬를 통째로 내려서 같은 층 빗방울이 줄 맞춰 움직인다. 빗방울마다 속도·길이·바람이
+       다른 캔버스 판은 선택 설치 항목 "rain"(<Rain />) — 도는 동안 <html data-rain-canvas> 로 아래 층들을 끈다. */
 [data-weather="rain"] {
   --shadow-1: 0 1px 3px rgb(0 0 0 / 0.05);
   --shadow-2: 0 4px 16px rgb(0 0 0 / 0.08);
@@ -517,11 +519,16 @@
     linear-gradient(180deg, #0c1238 0%, #121648 55%, #241a4e 100%);
 }
 
-/* 유리 물방울(WebGL 캔버스)이 도는 동안은 빗줄기 층을 끈다 — 캔버스가 조명+유리를 통째로 그리므로.
-   RainGlass 가 실제로 그리기 시작할 때만 <html data-rain-glass> 를 건다(미지원·reduced-motion 이면 빗줄기 유지) */
+/* 캔버스가 비를 그리는 동안은 CSS 빗줄기 층을 끈다. 두 렌더러 다 실제로 그리기 시작할 때만 속성을 건다
+   (미지원·reduced-motion 이면 안 걸어서 CSS 빗줄기가 남는다).
+   - data-rain-glass: 유리 물방울(WebGL) — 조명+유리를 통째로 그린다 (쇼케이스)
+   - data-rain-canvas: 캔버스 빗줄기 (선택 설치 항목 "rain") */
 [data-weather="rain"][data-rain-glass]::before,
 [data-weather="rain"][data-rain-glass] body::before,
-[data-weather="rain"][data-rain-glass] body::after {
+[data-weather="rain"][data-rain-glass] body::after,
+[data-weather="rain"][data-rain-canvas]::before,
+[data-weather="rain"][data-rain-canvas] body::before,
+[data-weather="rain"][data-rain-canvas] body::after {
   display: none;
 }
 

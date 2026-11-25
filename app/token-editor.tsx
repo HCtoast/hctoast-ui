@@ -1,11 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { Copy, RotateCcw } from "lucide-react";
+import { Copy, Palette, RotateCcw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { FixedLabel } from "@/components/ui/fixed-label";
 import { Input } from "@/components/ui/input";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/cn";
 
 import { useRain, useTheme } from "./theme-control";
@@ -22,8 +23,10 @@ import {
 } from "./token-overrides";
 
 /* 색 토큰 편집기 — "보기 설정" 패널의 두 번째 탭. 값 저장·적용 규칙은 token-overrides.ts 에.
-   한 줄 = [견본(누르면 색 고르기)] 토큰 이름 [hex 입력] [이 토큰만 초기화]. 줄 구성은 바뀌어도 늘 같고,
-   덮어쓴 줄은 이름 색만 진해진다(굵기·테두리를 바꾸면 크기가 변한다 — 규칙). */
+   한 줄 = [견본] 토큰 이름 [색 고르기 아이콘] [hex 입력] [이 토큰만 초기화]. 줄 구성은 바뀌어도 늘 같고,
+   덮어쓴 줄은 이름 색만 진해진다(굵기·테두리를 바꾸면 크기가 변한다 — 규칙).
+   처음엔 견본을 누르면 색 고르기가 열렸는데, 견본이 눌린다는 걸 알 길이 없었다(사용자 피드백 2026-11-25).
+   그래서 견본은 보기만 하고, 입력칸 왼쪽에 팔레트 아이콘 + 툴팁을 따로 둔다. */
 
 export function TokenEditor() {
   const theme = useTheme() as ThemeName;
@@ -63,41 +66,44 @@ export function TokenEditor() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-4">
-        <p className="text-body-sm text-fg-muted">
-          지금 테마 <FixedLabel value={theme} options={THEMES} className="text-fg" />에만 적용돼요. 테마마다
-          따로 기억하고, 이 브라우저에만 저장돼요. hover·선택 하이라이트는 fg·accent 를 따라가요.
-        </p>
-        <div className="flex gap-2">
-          <Button size="sm" variant="secondary" disabled={count === 0} onClick={() => void copy()}>
-            <Copy />
-            <FixedLabel value={copied ? "복사됨" : "CSS 복사"} options={["CSS 복사", "복사됨"]} />
-          </Button>
-          <Button size="sm" variant="ghost" disabled={count === 0} onClick={resetAll}>
-            <RotateCcw /> 전체 초기화
-          </Button>
+    <TooltipProvider>
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
+          <p className="text-body-sm text-fg-muted">
+            지금 테마 <FixedLabel value={theme} options={THEMES} className="text-fg" />에만 적용돼요. 테마마다
+            따로 기억하고, 이 브라우저에만 저장돼요. hex 를 칸에 바로 치거나 칸 왼쪽 팔레트 아이콘으로 골라요.
+            hover·선택 하이라이트는 fg·accent 를 따라가요.
+          </p>
+          <div className="flex gap-2">
+            <Button size="sm" variant="secondary" disabled={count === 0} onClick={() => void copy()}>
+              <Copy />
+              <FixedLabel value={copied ? "복사됨" : "CSS 복사"} options={["CSS 복사", "복사됨"]} />
+            </Button>
+            <Button size="sm" variant="ghost" disabled={count === 0} onClick={resetAll}>
+              <RotateCcw /> 전체 초기화
+            </Button>
+          </div>
         </div>
-      </div>
 
-      {TOKEN_GROUPS.map((g) => (
-        <section key={g.label} className="flex flex-col gap-2">
-          <h4 className="text-label text-fg-muted">{g.label}</h4>
-          <ul className="flex flex-col gap-2">
-            {g.tokens.map((t) => (
-              <TokenRow
-                key={`${theme}-${t}`}
-                name={t}
-                value={mine[t] ?? defaults[t] ?? ""}
-                overridden={t in mine}
-                onChange={(hex) => setToken(t, hex)}
-                onReset={() => resetToken(t)}
-              />
-            ))}
-          </ul>
-        </section>
-      ))}
-    </div>
+        {TOKEN_GROUPS.map((g) => (
+          <section key={g.label} className="flex flex-col gap-2">
+            <h4 className="text-label text-fg-muted">{g.label}</h4>
+            <ul className="flex flex-col gap-2">
+              {g.tokens.map((t) => (
+                <TokenRow
+                  key={`${theme}-${t}`}
+                  name={t}
+                  value={mine[t] ?? defaults[t] ?? ""}
+                  overridden={t in mine}
+                  onChange={(hex) => setToken(t, hex)}
+                  onReset={() => resetToken(t)}
+                />
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+    </TooltipProvider>
   );
 }
 
@@ -128,27 +134,43 @@ function TokenRow({
 
   return (
     <li className="flex items-center gap-2">
-      <button
-        type="button"
-        aria-label={`${name} 색 고르기`}
-        onClick={() => picker.current?.showPicker?.() ?? picker.current?.click()}
+      <span
+        aria-hidden
         // 견본은 토큰 자체를 칠한다 — hex 를 박지 않으므로 덮어쓰기·테마 전환을 그대로 따라간다
         style={{ backgroundColor: `var(--${name})` }}
         className="size-8 shrink-0 rounded-sm border border-border-strong"
       />
-      <input
-        ref={picker}
-        type="color"
-        tabIndex={-1}
-        aria-hidden
-        className="sr-only"
-        value={value.slice(0, 7) || "#000000"}
-        // 색 고르기는 알파가 없다 — 원래 알파(#rrggbbaa 의 aa)는 지킨다
-        onChange={(e) => onChange(e.target.value + (value.length === 9 ? value.slice(7) : ""))}
-      />
       <label htmlFor={id} className={cn("min-w-0 flex-1 truncate text-code", overridden ? "text-fg" : "text-fg-subtle")}>
         {name}
       </label>
+      {/* 브라우저 색 고르기 창은 <input type="color"> 의 자리에 붙어 뜬다. 예전엔 sr-only(1px, 줄 밖)라 창이
+          엉뚱하게 아래에 떴다 — 그래서 아이콘 버튼과 같은 칸에 투명하게 겹쳐 둔다 */}
+      <span className="relative shrink-0">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              size="sm"
+              variant="ghost"
+              aria-label={`${name} 색 고르기`}
+              onClick={() => (picker.current?.showPicker ? picker.current.showPicker() : picker.current?.click())}
+              className="w-8 px-0"
+            >
+              <Palette />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>색 고르기 — hex 는 오른쪽 칸에 바로 쳐도 돼요</TooltipContent>
+        </Tooltip>
+        <input
+          ref={picker}
+          type="color"
+          tabIndex={-1}
+          aria-hidden
+          className="pointer-events-none absolute inset-0 size-full opacity-0"
+          value={value.slice(0, 7) || "#000000"}
+          // 색 고르기는 알파가 없다 — 원래 알파(#rrggbbaa 의 aa)는 지킨다
+          onChange={(e) => onChange(e.target.value + (value.length === 9 ? value.slice(7) : ""))}
+        />
+      </span>
       <Input
         id={id}
         value={draft}
@@ -165,16 +187,24 @@ function TokenRow({
         }}
         className={cn("h-8 w-32 px-3 text-code", !valid && "text-danger")}
       />
-      <Button
-        size="sm"
-        variant="ghost"
-        aria-label={`${name} 기본값으로`}
-        disabled={!overridden}
-        onClick={onReset}
-        className="w-8 px-0"
-      >
-        <RotateCcw />
-      </Button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          {/* 비활성 버튼은 포인터 이벤트가 없어 툴팁이 안 뜬다 — 감싸는 칸에 건다 */}
+          <span className="shrink-0">
+            <Button
+              size="sm"
+              variant="ghost"
+              aria-label={`${name} 기본값으로`}
+              disabled={!overridden}
+              onClick={onReset}
+              className="w-8 px-0"
+            >
+              <RotateCcw />
+            </Button>
+          </span>
+        </TooltipTrigger>
+        <TooltipContent>{overridden ? "이 토큰만 기본값으로" : "바꾼 적 없어요"}</TooltipContent>
+      </Tooltip>
     </li>
   );
 }

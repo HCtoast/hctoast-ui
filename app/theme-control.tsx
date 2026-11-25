@@ -199,3 +199,52 @@ export function ThemeControl() {
     </div>
   );
 }
+
+/* 빗줄기를 무엇으로 그리나 — <html data-rain-render="css"> 면 기본 설치판(theme.css 의 CSS 빗줄기),
+   없으면 선택 설치 항목 rain(<Rain />, 캔버스). 쇼케이스에서 둘을 바로 비교하려고 둔다. 기본은 캔버스 */
+const RENDER_KEY = "hctoast-rain-render";
+export type RainRender = "canvas" | "css";
+function currentRender(): RainRender {
+  return document.documentElement.dataset.rainRender === "css" ? "css" : "canvas";
+}
+function subscribeRender(onChange: () => void) {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-rain-render"] });
+  return () => observer.disconnect();
+}
+export function useRainRender(): RainRender {
+  return React.useSyncExternalStore(subscribeRender, currentRender, () => "canvas" as RainRender);
+}
+function applyRender(r: RainRender) {
+  if (r === "css") document.documentElement.dataset.rainRender = "css";
+  else delete document.documentElement.dataset.rainRender;
+  try {
+    if (r === "css") localStorage.setItem(RENDER_KEY, r);
+    else localStorage.removeItem(RENDER_KEY);
+  } catch {
+    // 저장 실패는 무시
+  }
+}
+const RENDER_OPTIONS: { id: RainRender; label: string }[] = [
+  { id: "canvas", label: "캔버스" },
+  { id: "css", label: "CSS" },
+];
+export function RainRenderControl({ disabled }: { disabled?: boolean }) {
+  const r = useRainRender();
+  return (
+    <div className="flex gap-2" role="group" aria-label="빗줄기 그리기">
+      {RENDER_OPTIONS.map((o) => (
+        <Button
+          key={o.id}
+          size="sm"
+          variant={r === o.id ? "primary" : "secondary"}
+          aria-pressed={r === o.id}
+          disabled={disabled}
+          onClick={() => applyRender(o.id)}
+        >
+          {o.label}
+        </Button>
+      ))}
+    </div>
+  );
+}
