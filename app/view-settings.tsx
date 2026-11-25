@@ -34,10 +34,14 @@ import { TokenEditor } from "./token-editor";
      닫혀서 "배경만 보기" 중에 창을 띄워 둔 채 조절할 수 없었다(사용자 요청 2026-11-25).
    - 그래서 바깥을 눌러도 안 닫히는 도구 창으로: 닫기는 X · Esc · 헤더 버튼. 대신 포커스 트랩은 없다.
 
-   위치: 머리 줄(손잡이)을 끌어서 옮기고, 놓은 자리를 localStorage 에 기억한다. 창이 화면 밖으로 사라지면
+   위치: 머리 줄(버튼을 뺀 전체)을 끌어서 옮기고, 놓은 자리를 localStorage 에 기억한다. 창이 화면 밖으로 사라지면
    되돌릴 방법이 없어서, 그리는 위치는 늘 화면 안으로 깎는다(창 크기·창 내용이 바뀔 때마다). 기억하는 건
    깎기 전 "놓은 자리"라 창을 다시 키우면 그 자리로 돌아간다. 손잡이를 두 번 누르면 기본 자리(헤더 버튼
    아래)로 돌아가고 기억도 지운다.
+   손잡이는 처음엔 머리 줄 가운데의 제목 글자 줄(16px)뿐이라, 64px 줄의 위아래 여백을 잡으면 아무 반응이 없어
+   "끌기가 됐다 안 됐다" 했다(2026-11-25). 그래서 줄 전체에 걸고 버튼에서 시작한 누름만 거른다.
+   끄는 동안엔 상태(setPos)를 안 바꾸고 DOM 의 left/top 만 바로 고친다 — 매 pointermove 마다 사진 목록·
+   토큰 목록까지 다시 그리면 손을 못 따라온다. 놓을 때 한 번 상태로 옮긴다.
 
    높이: 내용만큼(빈 공간 없이), 최대 MAX_H 에서 안쪽만 스크롤. night-city 장면 탭은 사진 목록 때문에
    늘 MAX_H 에 닿는다 — 예전 고정 높이(h-160 = 640)와 같은 값이라 그 테마에선 크기가 그대로다.
@@ -135,9 +139,12 @@ export function ViewSettings() {
   const panelRef = React.useRef<HTMLDivElement | null>(null);
   const placed = React.useRef<Pos | null>(null); // 사용자가 놓은 자리(깎기 전). null = 기본 자리
   const drag = React.useRef<{ px: number; py: number; x: number; y: number } | null>(null);
+  const posRef = React.useRef<Pos>({ x: 0, y: 0 }); // 지금 그려진 자리(끄는 중엔 상태보다 앞선다)
+  const [dragging, setDragging] = React.useState(false);
+  const [tipOpen, setTipOpen] = React.useState(false);
 
-  /** 원하는 자리(없으면 기본 자리)를 화면 안으로 깎아 그린다 */
-  const place = React.useCallback((want: Pos | null): Pos => {
+  /** 원하는 자리(없으면 기본 자리)를 화면 안으로 깎아 그린다. live = 끄는 중 — DOM 만 고친다 */
+  const place = React.useCallback((want: Pos | null, live = false): Pos => {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
     const el = panelRef.current;
@@ -152,8 +159,14 @@ export function ViewSettings() {
       x: Math.round(Math.min(Math.max(MARGIN, target.x), Math.max(MARGIN, vw - w - MARGIN))),
       y: Math.round(Math.min(Math.max(MARGIN, target.y), Math.max(MARGIN, vh - h - MARGIN))),
     };
-    setPos(next);
-    setMaxH(Math.min(MAX_H, vh - 2 * MARGIN));
+    posRef.current = next;
+    if (live && el) {
+      el.style.left = `${next.x}px`;
+      el.style.top = `${next.y}px`;
+    } else {
+      setPos(next);
+      setMaxH(Math.min(MAX_H, vh - 2 * MARGIN));
+    }
     return next;
   }, []);
 
@@ -186,20 +199,23 @@ export function ViewSettings() {
     setOpen(next);
   };
 
+  const fromButton = (e: React.SyntheticEvent) => !!(e.target as Element).closest("button");
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (e.button !== 0) return;
+    if (e.button !== 0 || fromButton(e)) return;
     e.currentTarget.setPointerCapture(e.pointerId);
-    drag.current = { px: e.clientX, py: e.clientY, x: pos.x, y: pos.y };
+    drag.current = { px: e.clientX, py: e.clientY, ...posRef.current };
+    setDragging(true);
   };
   const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     const d = drag.current;
     if (!d) return;
-    place({ x: d.x + e.clientX - d.px, y: d.y + e.clientY - d.py });
+    place({ x: d.x + e.clientX - d.px, y: d.y + e.clientY - d.py }, true);
   };
   const onPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
     const d = drag.current;
     if (!d) return;
     drag.current = null;
+    setDragging(false);
     const moved = { x: d.x + e.clientX - d.px, y: d.y + e.clientY - d.py };
     if (moved.x === d.x && moved.y === d.y) return; // 그냥 누른 것
     // 놓은 자리는 깎은 값으로 기억한다 — 화면 밖으로 끌어 놓았다면 그건 의도가 아니라 실수라서
@@ -249,19 +265,32 @@ export function ViewSettings() {
             "data-[state=open]:animate-pop-in data-[state=closed]:animate-pop-out"
           }
         >
-          <div className="flex items-center gap-2 px-6 py-4">
+          <div
+            data-slot="view-settings-handle"
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerUp}
+            onPointerCancel={() => {
+              drag.current = null;
+              setDragging(false);
+              place(placed.current);
+            }}
+            onDoubleClick={(e) => {
+              if (!fromButton(e)) resetPos();
+            }}
+            className="flex cursor-grab touch-none select-none items-center gap-2 px-6 py-4 active:cursor-grabbing"
+          >
             <TooltipProvider>
-              <Tooltip>
+              {/* 끄는 동안엔 툴팁을 막는다 — 손잡이가 마우스와 같이 움직여서 계속 "올라와 있는" 상태가 된다 */}
+              <Tooltip
+                open={tipOpen && !dragging}
+                // 끄는 중엔 상태를 안 바꾼다 — 다시 그리면 style 이 상태(옛 자리)로 돌아가 창이 순간 튄다
+                onOpenChange={(o) => {
+                  if (!drag.current) setTipOpen(o);
+                }}
+              >
                 <TooltipTrigger asChild>
-                  <div
-                    data-slot="view-settings-handle"
-                    onPointerDown={onPointerDown}
-                    onPointerMove={onPointerMove}
-                    onPointerUp={onPointerUp}
-                    onPointerCancel={() => (drag.current = null)}
-                    onDoubleClick={resetPos}
-                    className="flex min-w-0 flex-1 cursor-grab touch-none select-none items-center gap-2 active:cursor-grabbing"
-                  >
+                  <div className="flex min-w-0 flex-1 items-center gap-2">
                     <GripVertical className="icon-sm shrink-0 text-fg-subtle" />
                     <DialogPrimitive.Title className="truncate text-label text-fg">보기 설정</DialogPrimitive.Title>
                   </div>

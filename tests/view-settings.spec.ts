@@ -83,15 +83,28 @@ test("높이: 내용만큼 — day 는 640 보다 작고 night-city 는 640", as
   await expect.poll(async () => Math.round((await p.boundingBox())!.height)).toBe(640);
 });
 
+test("버튼은 끌기를 시작하지 않는다", async ({ page }) => {
+  await openSettings(page);
+  const p = page.locator(panel);
+  const start = (await p.boundingBox())!;
+  const btn = (await p.getByRole("button", { name: "닫기" }).boundingBox())!;
+  await page.mouse.move(btn.x + btn.width / 2, btn.y + btn.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(btn.x - 200, btn.y + 100, { steps: 4 });
+  await page.mouse.up();
+  expect(Math.round((await p.boundingBox())!.x)).toBe(Math.round(start.x));
+});
+
 test("끌어서 옮기면 자리를 기억하고, 두 번 누르면 원래 자리로", async ({ page }) => {
   await openSettings(page);
   const p = page.locator(panel);
   const handle = p.locator('[data-slot="view-settings-handle"]');
   const start = (await p.boundingBox())!;
   const h = (await handle.boundingBox())!;
-  await page.mouse.move(h.x + 20, h.y + h.height / 2);
+  // 제목 글자 줄이 아니라 머리 줄 위쪽 여백(8px 아래)을 잡는다 — 예전엔 여기가 안 잡혔다
+  await page.mouse.move(h.x + 20, h.y + 8);
   await page.mouse.down();
-  await page.mouse.move(h.x + 20 - 300, h.y + h.height / 2 + 100, { steps: 6 });
+  await page.mouse.move(h.x + 20 - 300, h.y + 8 + 100, { steps: 6 });
   await page.mouse.up();
   const moved = (await p.boundingBox())!;
   expect(Math.round(moved.x)).toBe(Math.round(start.x - 300));
